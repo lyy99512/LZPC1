@@ -1,0 +1,4881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>演出列表 - 量子票仓</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+            background: #fafbfc;
+            min-height: 100vh;
+        }
+
+        
+        
+        
+        .header {
+            background: rgba(255,255,255,0.98);
+            border-bottom: 1.5px solid #e5e7ef;
+            padding: 22px 0 18px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 2px 16px 0 rgba(60,80,180,0.04);
+        }
+        .logo {
+            height: 52px;
+            margin-right: 0;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.10));
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+        .header-nav a {
+            color: #1a2340;
+            text-decoration: none;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+            font-weight: 600;
+            font-size: 20px;
+            padding: 8px 24px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #f7fafd 60%, #e9eef6 100%);
+            letter-spacing: 1px;
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 1px 4px rgba(60,80,180,0.04);
+        }
+        .header-nav a:hover {
+            background: linear-gradient(135deg, #2a6cff 60%, #1a2340 100%);
+            color: #fff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(60,80,180,0.10);
+        }
+        
+        
+        .search-bar {
+            max-width: 480px;
+            width: 480px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 32px;
+            box-shadow: 0 2px 16px rgba(60,80,180,0.08);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            transition: border 0.25s, box-shadow 0.25s;
+            position: relative;
+        }
+        .search-bar:focus-within {
+            border: 2px solid #2a6cff;
+            box-shadow: 0 4px 24px rgba(42,108,255,0.10);
+        }
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #bfc6d1;
+            font-size: 22px;
+            pointer-events: none;
+        }
+        .search-input {
+            border-radius: 32px;
+            border: none;
+            padding: 14px 24px 14px 48px;
+            font-size: 18px;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+            color: #1a2340;
+            background: transparent;
+            font-weight: 500;
+            box-shadow: none;
+            outline: none;
+            flex: 1;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #e0e0e0 !important;
+        }
+        .current-city {
+            min-width: 90px;
+            display: inline-flex;
+            align-items: center;
+            color: #fff;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 10px 22px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #2a6cff 60%, #1a2340 100%);
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(42,108,255,0.10);
+            margin-left: 0;
+        }
+        .current-city span#current-city {
+            color: #fff !important;
+        }
+        .current-city-label {
+            color: #bfc6d1;
+            font-size: 15px;
+            margin-left: 10px;
+            font-weight: 400;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        .current-city-label {
+            color: #bfc6d1;
+            font-size: 15px;
+            margin-left: 10px;
+            font-weight: 400;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+
+        .logo {
+            height: 45px;
+            margin-right: 0;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .search-bar {
+            max-width: 500px;
+            width: 500px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            border-radius: 25px 0 0 25px;
+            border: 2px solid #e0e0e0;
+            border-right: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .header-nav a:hover {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+        }
+
+        
+        .current-city {
+            min-width: 80px;
+            display: inline-flex;
+            align-items: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.18);
+        }
+        .current-city-label {
+            color: #bbb;
+            font-size: 14px;
+            margin-left: 8px;
+            font-weight: 400;
+        }
+
+
+
+        .logo {
+            height: 36px;
+            margin-right: 0;
+        }
+
+        .search-bar {
+            max-width: 400px;
+            margin: 0;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .current-city {
+            min-width: 60px;
+            display: inline-block;
+            color: #666;
+        }
+
+
+        .logo {
+            height: 36px;
+            margin-right: 16px;
+        }
+
+        .search-bar {
+            max-width: 400px;
+        }
+
+        .filter-bar {
+            background: #fff;
+            border-radius: 8px;
+            margin: 24px 0 16px 0;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        .card-list {
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px 2%;
+        }
+
+        .show-card {
+            display: flex;
+            flex-direction: row;
+            width: 49%;
+            min-width: 340px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            margin-bottom: 0;
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            align-items: stretch;
+        }
+
+        .show-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .show-img {
+            width: 120px;
+            height: 160px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .show-info {
+            flex: 1;
+            padding: 18px 18px 18px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .show-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .show-meta {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .show-price {
+            color: #f43b5c;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .badge-category {
+            background: #f43b5c;
+            color: #fff;
+            font-size: 12px;
+            margin-right: 8px;
+            border-radius: 8px;
+            padding: 2px 8px;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+
+        @media (max-width: 900px) {
+            .show-card {
+                width: 100%;
+                min-width: 0;
+            }
+            .card-list {
+                gap: 18px 0;
+            }
+        }
+
+        /* 移动端优化样式 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 0;
+            }
+            
+            .logo {
+                height: 50px;
+            }
+            
+            .header-nav {
+                gap: 15px;
+            }
+            
+            .header-nav a {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: 100%;
+                margin: 0 15px;
+            }
+            
+            .search-input {
+                font-size: 16px;
+                padding: 12px 20px 12px 45px;
+            }
+            
+            .current-city {
+                font-size: 14px;
+                padding: 8px 12px;
+                min-width: 70px;
+            }
+            
+            .current-city-label {
+                font-size: 12px;
+                margin-left: 5px;
+            }
+            
+            .filter-bar {
+                margin: 15px 0 10px 0;
+                padding: 12px;
+            }
+            
+            .show-card {
+                flex-direction: column;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .show-img {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .show-info {
+                padding: 15px;
+            }
+            
+            .show-title {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            
+            .show-meta {
+                font-size: 13px;
+            }
+            
+            .show-price {
+                font-size: 16px;
+            }
+            
+            .badge-category {
+                font-size: 11px;
+                padding: 1px 6px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .form-select {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 0;
+                gap: 10px;
+            }
+            
+            .logo {
+                height: 40px;
+            }
+            
+            .header-nav a {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .search-input {
+                font-size: 14px;
+                padding: 10px 18px 10px 40px;
+            }
+            
+            .current-city {
+                font-size: 12px;
+                padding: 6px 10px;
+                min-width: 60px;
+            }
+            
+            .current-city-label {
+                font-size: 10px;
+                margin-left: 3px;
+            }
+            
+            .filter-bar {
+                padding: 10px;
+                margin: 10px 0 8px 0;
+            }
+            
+            .show-img {
+                height: 180px;
+            }
+            
+            .show-info {
+                padding: 12px;
+            }
+            
+            .show-title {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+            
+            .show-meta {
+                font-size: 12px;
+            }
+            
+            .show-price {
+                font-size: 15px;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .form-select {
+                font-size: 13px;
+            }
+        }
+
+        /* 触摸优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .show-card {
+                cursor: default;
+            }
+            
+            .show-card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+            
+            .header-nav a:active {
+                transform: scale(0.95);
+            }
+            
+            .search-btn:active {
+                transform: scale(0.95);
+            }
+        }
+
+        /* 防止移动端缩放 */
+        @media screen and (max-width: 768px) {
+            input[type="text"], 
+            input[type="search"], 
+            input[type="email"], 
+            input[type="tel"],
+            select,
+            textarea {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+            <!-- 顶部导航 -->
+            <div class="header">
+                <img src="file:///E:/图片/量子票仓.png" class="logo" alt="logo" style="height:72px;">
+                <div class="header-nav">
+                    <a href="index.html">首页</a>
+                </div>
+                <form class="search-bar" onsubmit="return false;">
+                    <span class="search-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="7"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                    </span>
+                    <input class="form-control search-input" id="search-input" type="search" placeholder="搜索明星、演出、体育赛事" aria-label="搜索">
+                </form>
+                <div class="current-city">
+                    <span id="current-city">北京</span> <span class="current-city-label">当前城市</span>
+                </div>
+            </div>
+            <div class="container">
+        <!-- 筛选栏 -->
+        <div class="filter-bar mb-2 d-flex align-items-center">
+            <span class="me-2">省份：</span>
+            <select id="province-select" class="form-select form-select-sm me-3" style="width: 120px; display: inline-block;">
+<option value="全部">全部</option>
+    <option value="上海">上海</option>
+    <option value="云南省">云南省</option>
+    <option value="内蒙古自治区">内蒙古自治区</option>
+    <option value="北京">北京</option>
+    <option value="台湾省">台湾省</option>
+    <option value="吉林省">吉林省</option>
+    <option value="四川省">四川省</option>
+    <option value="天津">天津</option>
+    <option value="宁夏回族自治区">宁夏回族自治区</option>
+    <option value="安徽省">安徽省</option>
+    <option value="山东省">山东省</option>
+    <option value="山西省">山西省</option>
+    <option value="广东省">广东省</option>
+    <option value="广西壮族自治区">广西壮族自治区</option>
+    <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+    <option value="江苏省">江苏省</option>
+    <option value="江西省">江西省</option>
+    <option value="河北省">河北省</option>
+    <option value="河南省">河南省</option>
+    <option value="浙江省">浙江省</option>
+    <option value="海南省">海南省</option>
+    <option value="湖北省">湖北省</option>
+    <option value="湖南省">湖南省</option>
+    <option value="澳门特别行政区">澳门特别行政区</option>
+    <option value="甘肃省">甘肃省</option>
+    <option value="福建省">福建省</option>
+    <option value="西藏自治区">西藏自治区</option>
+    <option value="贵州省">贵州省</option>
+    <option value="辽宁省">辽宁省</option>
+    <option value="重庆">重庆</option>
+    <option value="陕西省">陕西省</option>
+    <option value="青海省">青海省</option>
+    <option value="香港特别行政区">香港特别行政区</option>
+    <option value="黑龙江省">黑龙江省</option>
+</select>
+            <span class="me-2">城市：</span>
+            <select id="city-select" class="form-select form-select-sm me-3" style="width: 120px; display: inline-block;">
+                <option value="全部">全部</option>
+            </select>
+            <span class="me-2">类型：</span>
+            <select id="category-select" class="form-select form-select-sm" style="width: 150px; display: inline-block;">
+<option value="全部">全部</option>
+    <option value="演唱会">演唱会</option>
+    <option value="音乐节">音乐节</option>
+    <option value="曲艺相声">曲艺相声</option>
+    <option value="艺术展览">艺术展览</option>
+    <option value="体育赛事">体育赛事</option>
+    <option value="脱口秀">脱口秀</option>
+    <option value="LIVEHOUSE">LIVEHOUSE</option>
+    <option value="其他">其他</option>
+            </select>
+        </div>
+
+        <div class="filter-bar">
+            <span>共 <span id="total-count">0</span> 个商品</span>
+        </div>
+
+        <!-- 演出卡片列表 -->
+        <div class="card-list" id="card-list">
+            <!-- 动态插入演出卡片 -->
+        </div>
+
+        <!-- 分页控件 -->
+        <nav>
+            <ul class="pagination" id="pagination">
+                <!-- 动态插入分页控件 -->
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+    // 嵌入数据
+    window.provinceCityMap = {
+  "上海": [
+    "上海"
+  ],
+  "云南省": [
+    "临沧",
+    "丽江",
+    "保山",
+    "大理",
+    "德宏",
+    "怒江",
+    "文山",
+    "昆明",
+    "昭通",
+    "普洱",
+    "曲靖",
+    "楚雄",
+    "玉溪",
+    "红河",
+    "西双版纳",
+    "迪庆"
+  ],
+  "其他": [
+    "合肥",
+    "沈阳",
+    "福州"
+  ],
+  "内蒙古自治区": [
+    "乌兰察布",
+    "乌海",
+    "兴安盟",
+    "包头",
+    "呼伦贝尔",
+    "呼和浩特",
+    "巴彦淖尔",
+    "赤峰",
+    "通辽",
+    "鄂尔多斯",
+    "锡林郭勒盟",
+    "阿拉善盟"
+  ],
+  "北京": [
+    "北京"
+  ],
+  "台湾省": [
+    "云林",
+    "南投",
+    "台东",
+    "台中",
+    "台北",
+    "台南",
+    "嘉义",
+    "基隆",
+    "宜兰",
+    "屏东",
+    "彰化",
+    "新北",
+    "新竹",
+    "桃园",
+    "澎湖",
+    "花莲",
+    "连江",
+    "金门",
+    "高雄"
+  ],
+  "吉林省": [
+    "吉林",
+    "四平",
+    "延边",
+    "松原",
+    "白城",
+    "白山",
+    "辽源",
+    "通化",
+    "长春"
+  ],
+  "四川省": [
+    "乐山",
+    "内江",
+    "凉山",
+    "南充",
+    "宜宾",
+    "巴中",
+    "广元",
+    "广安",
+    "德阳",
+    "成都",
+    "攀枝花",
+    "泸州",
+    "甘孜",
+    "眉山",
+    "绵阳",
+    "自贡",
+    "资阳",
+    "达州",
+    "遂宁",
+    "阿坝",
+    "雅安"
+  ],
+  "天津": [
+    "天津"
+  ],
+  "宁夏回族自治区": [
+    "中卫",
+    "吴忠",
+    "固原",
+    "石嘴山",
+    "银川"
+  ],
+  "安徽省": [
+    "亳州",
+    "六安",
+    "合肥",
+    "安庆",
+    "宣城",
+    "宿州",
+    "巢湖",
+    "池州",
+    "淮北",
+    "淮南",
+    "滁州",
+    "芜湖",
+    "蚌埠",
+    "铜陵",
+    "阜阳",
+    "马鞍山",
+    "黄山"
+  ],
+  "山东省": [
+    "东营",
+    "临沂",
+    "威海",
+    "德州",
+    "日照",
+    "枣庄",
+    "泰安",
+    "济南",
+    "济宁",
+    "淄博",
+    "滨州",
+    "潍坊",
+    "烟台",
+    "聊城",
+    "莱芜",
+    "菏泽",
+    "青岛"
+  ],
+  "山西省": [
+    "临汾",
+    "吕梁",
+    "大同",
+    "太原",
+    "忻州",
+    "晋中",
+    "晋城",
+    "朔州",
+    "运城",
+    "长治",
+    "阳泉"
+  ],
+  "广东省": [
+    "东莞",
+    "中山",
+    "云浮",
+    "佛山",
+    "广州",
+    "惠州",
+    "揭阳",
+    "梅州",
+    "汕头",
+    "汕尾",
+    "江门",
+    "河源",
+    "深圳",
+    "清远",
+    "湛江",
+    "潮州",
+    "珠海",
+    "肇庆",
+    "茂名",
+    "阳江",
+    "韶关"
+  ],
+  "广西壮族自治区": [
+    "北海",
+    "南宁",
+    "崇左",
+    "来宾",
+    "柳州",
+    "桂林",
+    "梧州",
+    "河池",
+    "玉林",
+    "百色",
+    "贵港",
+    "贺州",
+    "钦州",
+    "防城港"
+  ],
+  "新疆维吾尔自治区": [
+    "乌鲁木齐",
+    "五家渠",
+    "伊犁",
+    "克孜勒苏",
+    "克拉玛依",
+    "北屯",
+    "博尔塔拉",
+    "双河",
+    "可克达拉",
+    "吐鲁番",
+    "和田",
+    "哈密",
+    "喀什",
+    "图木舒克",
+    "塔城",
+    "巴音郭楞",
+    "昆玉",
+    "昌吉",
+    "石河子",
+    "胡杨河",
+    "铁门关",
+    "阿克苏",
+    "阿勒泰",
+    "阿拉尔"
+  ],
+  "江苏省": [
+    "南京",
+    "南通",
+    "宿迁",
+    "常州",
+    "徐州",
+    "扬州",
+    "无锡",
+    "泰州",
+    "淮安",
+    "盐城",
+    "苏州",
+    "连云港",
+    "镇江"
+  ],
+  "江西省": [
+    "上饶",
+    "九江",
+    "南昌",
+    "吉安",
+    "宜春",
+    "抚州",
+    "新余",
+    "景德镇",
+    "萍乡",
+    "赣州",
+    "鹰潭"
+  ],
+  "河北省": [
+    "保定",
+    "唐山",
+    "廊坊",
+    "张家口",
+    "承德",
+    "沧州",
+    "石家庄",
+    "秦皇岛",
+    "衡水",
+    "邢台",
+    "邯郸"
+  ],
+  "河南省": [
+    "三门峡",
+    "信阳",
+    "南阳",
+    "周口",
+    "商丘",
+    "安阳",
+    "平顶山",
+    "开封",
+    "新乡",
+    "洛阳",
+    "济源",
+    "漯河",
+    "濮阳",
+    "焦作",
+    "许昌",
+    "郑州",
+    "驻马店",
+    "鹤壁"
+  ],
+  "浙江省": [
+    "丽水",
+    "台州",
+    "嘉兴",
+    "宁波",
+    "杭州",
+    "温州",
+    "湖州",
+    "绍兴",
+    "舟山",
+    "衢州",
+    "金华"
+  ],
+  "海南省": [
+    "万宁",
+    "三亚",
+    "三沙",
+    "东方",
+    "临高",
+    "乐东",
+    "五指山",
+    "保亭",
+    "儋州",
+    "定安",
+    "屯昌",
+    "文昌",
+    "昌江",
+    "海口",
+    "澄迈",
+    "琼中",
+    "琼海",
+    "白沙",
+    "陵水"
+  ],
+  "湖北省": [
+    "仙桃",
+    "十堰",
+    "咸宁",
+    "天门",
+    "孝感",
+    "宜昌",
+    "恩施",
+    "武汉",
+    "潜江",
+    "神农架",
+    "荆州",
+    "荆门",
+    "襄阳",
+    "鄂州",
+    "随州",
+    "黄冈",
+    "黄石"
+  ],
+  "湖南省": [
+    "娄底",
+    "岳阳",
+    "常德",
+    "张家界",
+    "怀化",
+    "株洲",
+    "永州",
+    "湘潭",
+    "湘西",
+    "益阳",
+    "衡阳",
+    "邵阳",
+    "郴州",
+    "长沙"
+  ],
+  "澳门特别行政区": [
+    "澳门"
+  ],
+  "甘肃省": [
+    "临夏",
+    "兰州",
+    "嘉峪关",
+    "天水",
+    "定西",
+    "平凉",
+    "庆阳",
+    "张掖",
+    "武威",
+    "甘南",
+    "白银",
+    "酒泉",
+    "金昌",
+    "陇南"
+  ],
+  "福建省": [
+    "三明",
+    "南平",
+    "厦门",
+    "宁德",
+    "泉州",
+    "漳州",
+    "福州",
+    "莆田",
+    "龙岩"
+  ],
+  "西藏自治区": [
+    "山南",
+    "拉萨",
+    "日喀则",
+    "昌都",
+    "林芝",
+    "那曲",
+    "阿里"
+  ],
+  "贵州省": [
+    "六盘水",
+    "安顺",
+    "贵阳",
+    "遵义",
+    "铜仁",
+    "黔东南",
+    "黔南",
+    "黔西南"
+  ],
+  "辽宁省": [
+    "丹东",
+    "大连",
+    "抚顺",
+    "朝阳",
+    "本溪",
+    "沈阳",
+    "盘锦",
+    "营口",
+    "葫芦岛",
+    "辽阳",
+    "铁岭",
+    "锦州",
+    "阜新",
+    "鞍山"
+  ],
+  "重庆": [
+    "重庆"
+  ],
+  "陕西省": [
+    "咸阳",
+    "商洛",
+    "安康",
+    "宝鸡",
+    "延安",
+    "榆林",
+    "汉中",
+    "渭南",
+    "西安",
+    "铜川"
+  ],
+  "青海省": [
+    "果洛",
+    "海东",
+    "海北",
+    "海南",
+    "海西",
+    "玉树",
+    "西宁",
+    "黄南"
+  ],
+  "香港特别行政区": [
+    "香港"
+  ],
+  "黑龙江省": [
+    "七台河",
+    "伊春",
+    "佳木斯",
+    "双鸭山",
+    "哈尔滨",
+    "大兴安岭",
+    "大庆",
+    "牡丹江",
+    "绥化",
+    "鸡西",
+    "鹤岗",
+    "黑河",
+    "齐齐哈尔"
+  ]
+};
+    window.showsData = [
+  {
+    "title": "当故事在唱歌·余超颖的音乐小剧场",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "茉莉花剧场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01MpjALM2GdShqN6LWI_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_当故事在唱歌_余超颖的音乐小剧场.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_当故事在唱歌_余超颖的音乐小剧场.html"
+  },
+  {
+    "title": "WOLFGANG2025巡回演唱会-上海站",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "国家会展中心(上海)虹馆EH",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN014TsL7D2GdShO21rOM_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_WOLFGANG2025巡回演唱会_上海站.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_WOLFGANG2025巡回演唱会_上海站.html"
+  },
+  {
+    "title": "2025蔡琴「不要告别」巡回演唱会-上海站",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "梅赛德斯-奔驰文化中心",
+    "price": "499",
+    "img": "file:///E:/网站图片/O1CN01Xi1qFB2GdShGAmRLu_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.10.07 周二 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_2025蔡琴_不要告别_巡回演唱会_上海站.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_2025蔡琴_不要告别_巡回演唱会_上海站.html"
+  },
+  {
+    "title": "跨越二次元ACG神级动漫演唱会",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "上海保利大剧院·大剧场",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01wvw43x2GdShyxDks8_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.14 周四 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_跨越二次元ACG神级动漫演唱会.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_跨越二次元ACG神级动漫演唱会.html"
+  },
+  {
+    "title": "女王蜂 Tour 2025「AKU」上海演唱会",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "上海静安体育中心·体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01CFSNR42GdShwdHMq1_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.30 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_女王蜂_Tour_2025_AKU_上海演唱会.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_女王蜂_Tour_2025_AKU_上海演唱会.html"
+  },
+  {
+    "title": "KOKIA 2025 CHINA TOUR Our Story Goes On ~心与心交织的歌~",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "北外滩友邦大剧院",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01P8SRZN2GdShqaJ5PN_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.19 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_KOKIA_2025_CHINA_TOUR_Our_Story_Goes_On_心与心交织的歌.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_KOKIA_2025_CHINA_TOUR_Our_Story_Goes_On_心与心交织的歌.html"
+  },
+  {
+    "title": "潘美辰《回家》巡回演唱会-上海站",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "北外滩友邦大剧院·大剧场",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01me5LMH2GdShxS5nNH_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_潘美辰_回家_巡回演唱会_上海站.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_潘美辰_回家_巡回演唱会_上海站.html"
+  },
+  {
+    "title": "李雨霏-霏常之约 2025 巡回演唱会-上海站",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "久事·上海南城剧院",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01wfVwFh2GdShuHDyFC_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.17 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_李雨霏_霏常之约_2025_巡回演唱会_上海站.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_李雨霏_霏常之约_2025_巡回演唱会_上海站.html"
+  },
+  {
+    "title": "卫兰OUT OF FRAME巡回演唱会-上海站",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "浦发银行东方体育中心",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01DaZxcX2GdShvyJgOt_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_卫兰OUT_OF_FRAME巡回演唱会_上海站.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_卫兰OUT_OF_FRAME巡回演唱会_上海站.html"
+  },
+  {
+    "title": "2025胡海泉《流浪者食堂》演唱会（980元含合影权益）",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "美琪大戏院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01QmFUdl2GdShtPbwP8_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_2025胡海泉_流浪者食堂_演唱会_980元含合影权益.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_2025胡海泉_流浪者食堂_演唱会_980元含合影权益.html"
+  },
+  {
+    "title": "只有你 邓咏麟 Foryou ...ONLY2025 上海特别专场【站席】",
+    "city": "上海",
+    "category": "演唱会",
+    "venue": "LIVERSE音宇宙艺术中心",
+    "price": "1799",
+    "img": "file:///E:/网站图片/O1CN01m7xEs12GdShwLwTkd_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.05 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "上海_只有你_邓咏麟_Foryou_ONLY2025_上海特别专场_站席.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_只有你_邓咏麟_Foryou_ONLY2025_上海特别专场_站席.html"
+  },
+  {
+    "title": "天鹅湖芭蕾舞剧",
+    "city": "上海",
+    "category": "艺术展览",
+    "venue": "东方艺术中心",
+    "price": "",
+    "img": "file:///E:/网站图片/OIP-C.4MCSMNm9CH-qa9hmbEiNfwHaE8",
+    "date": "2025-09-01 19:30",
+    "tag": "经典",
+    "status": "售票中",
+    "path": "上海_天鹅湖芭蕾舞剧.html",
+    "province": "上海",
+    "detail_url": "provinces-shows/上海/上海/details/上海_天鹅湖芭蕾舞剧.html"
+  },
+  {
+    "title": "【昆明】KPOP2015室内音乐节&YG专场 亚洲巡回演出·昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "空格现场",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01xivIiB2GdShy1VZHE_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.20 周日 14:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_KPOP2015室内音乐节_YG专场_亚洲巡回演出_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_KPOP2015室内音乐节_YG专场_亚洲巡回演出_昆明站.html"
+  },
+  {
+    "title": "【昆明】倒带2004·青春回游演唱会——一键回到华语乐坛黄金年代（昆明站）",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01NEJVlI2GdShNZZGqM_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.26 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_倒带2004_青春回游演唱会_一键回到华语乐坛黄金年代_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_倒带2004_青春回游演唱会_一键回到华语乐坛黄金年代_昆明站.html"
+  },
+  {
+    "title": "【昆明】POPMIX | Taylor Swift Fan Party 酒水畅饮霉粉派对（昆明站）",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "空格现场(新迎店)",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01R6MPtG2GdSi24MHU4_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_POPMIX_Taylor_Swift_Fan_Party_酒水畅饮霉粉派对_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_POPMIX_Taylor_Swift_Fan_Party_酒水畅饮霉粉派对_昆明站.html"
+  },
+  {
+    "title": "【昆明】左小祖咒音乐生涯30周年纪念巡演 昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "168",
+    "img": "file:///E:/网站图片/O1CN016QkwhZ2GdShp1MnqL_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.20 周日 20:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_左小祖咒音乐生涯30周年纪念巡演_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_左小祖咒音乐生涯30周年纪念巡演_昆明站.html"
+  },
+  {
+    "title": "【昆明】最浪漫的乐队不可撤销巡演 昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "109",
+    "img": "file:///E:/网站图片/O1CN01ckz00n2GdShrHybNv_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.30 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_最浪漫的乐队不可撤销巡演_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_最浪漫的乐队不可撤销巡演_昆明站.html"
+  },
+  {
+    "title": "【昆明】脑蚀乐队2025\"辩撞\"夏季巡演 昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN011mDpUu2GdShpyFwZD_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.01 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_脑蚀乐队2025_辩撞_夏季巡演_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_脑蚀乐队2025_辩撞_夏季巡演_昆明站.html"
+  },
+  {
+    "title": "【昆明】葡萄不愤怒乐队「Lucky Star」2025巡演 昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "99",
+    "img": "file:///E:/网站图片/O1CN01zbBsFv2GdSiC0qAnf_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.09 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_葡萄不愤怒乐队_Lucky_Star_2025巡演_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_葡萄不愤怒乐队_Lucky_Star_2025巡演_昆明站.html"
+  },
+  {
+    "title": "【昆明】SONICE呈现 海鸥诗人《爱无需多言》2025巡演 昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01yr77HD2GdShwlbpZX_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.02 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_SONICE呈现_海鸥诗人_爱无需多言_2025巡演_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_SONICE呈现_海鸥诗人_爱无需多言_2025巡演_昆明站.html"
+  },
+  {
+    "title": "【昆明】Zkaaai-2025巡演昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "空格现场(新迎店)",
+    "price": "128",
+    "img": "file:///E:/网站图片/O1CN01ko5Ugc2GdShUGQyuz_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_Zkaaai_2025巡演昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_Zkaaai_2025巡演昆明站.html"
+  },
+  {
+    "title": "【昆明】录耳Lur:「行进之声」五周年公路巡演·昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "空格现场(新迎店)",
+    "price": "99",
+    "img": "file:///E:/网站图片/O1CN01W23kYM2GdSi5xiECx_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.20 周日 20:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_录耳Lur_行进之声_五周年公路巡演_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_录耳Lur_行进之声_五周年公路巡演_昆明站.html"
+  },
+  {
+    "title": "【昆明】会心一笑 机械心 昆明专场 嘉宾：笑匠",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "空格现场(新迎店)",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01YTy4E12GdShoCLgsB_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.08 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_会心一笑_机械心_昆明专场_嘉宾_笑匠.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_会心一笑_机械心_昆明专场_嘉宾_笑匠.html"
+  },
+  {
+    "title": "【昆明】余佳运 45平米演唱会（livehouse限定版）昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "MODERNSKY LAB(昆明店)",
+    "price": "398",
+    "img": "file:///E:/网站图片/O1CN01TuFf1i2GdShipcrkQ_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.31 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_余佳运_45平米演唱会_livehouse限定版_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_余佳运_45平米演唱会_livehouse限定版_昆明站.html"
+  },
+  {
+    "title": "【昆明】周华健2025\"少年的奇幻之旅3.0\"巡回演唱会-昆明站",
+    "city": "昆明",
+    "category": "演唱会",
+    "venue": "昆明滇池国际会展中心7号馆",
+    "price": "499",
+    "img": "file:///E:/网站图片/O1CN01BYFwne2GdShzHYVY6_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.10.25 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "昆明_周华健2025_少年的奇幻之旅3_0_巡回演唱会_昆明站.html",
+    "province": "云南省",
+    "detail_url": "provinces-shows/云南省/昆明/details/昆明_周华健2025_少年的奇幻之旅3_0_巡回演唱会_昆明站.html"
+  },
+  {
+    "title": "林俊杰JJ20 FINAL LAP 巡回演唱会-北京站",
+    "city": "北京",
+    "category": "演唱会",
+    "venue": "国家体育场-鸟巢",
+    "price": "",
+    "img": "file:///E:/网站图片/R-C.6b186b03694e172ab5152a1fde99e1c4",
+    "date": "2025-08-10 19:30",
+    "tag": "热门",
+    "status": "售罄",
+    "path": "北京_林俊杰JJ20_FINAL_LAP_巡回演唱会_北京站.html",
+    "province": "北京",
+    "detail_url": "provinces-shows/北京/北京/details/北京_林俊杰JJ20_FINAL_LAP_巡回演唱会_北京站.html"
+  },
+  {
+    "title": "五月天【#5525回到那一天】25周年演唱会-北京站",
+    "city": "北京",
+    "category": "演唱会",
+    "venue": "国家体育场-鸟巢",
+    "price": "",
+    "img": "file:///E:/网站图片/v2-c7f8843d382907ffca33467edc378eb7_r.jpg",
+    "date": "2025.07.25-08.17 19:00",
+    "tag": "预售",
+    "status": "预售中",
+    "path": "北京_五月天_5525回到那一天_25周年演唱会_北京站.html",
+    "province": "北京",
+    "detail_url": "provinces-shows/北京/北京/details/北京_五月天_5525回到那一天_25周年演唱会_北京站.html"
+  },
+  {
+    "title": "CBA总决赛",
+    "city": "北京",
+    "category": "体育赛事",
+    "venue": "五棵松体育馆",
+    "price": "",
+    "img": "file:///E:/网站图片/OIP-C.J8f5u22MVN01hY2UQwtLRgHaEI",
+    "date": "2025-07-18 19:35",
+    "tag": "体育",
+    "status": "售票中",
+    "path": "北京_CBA总决赛.html",
+    "province": "北京",
+    "detail_url": "provinces-shows/北京/北京/details/北京_CBA总决赛.html"
+  },
+  {
+    "title": "新橙音乐节-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都西部国际博览城广场",
+    "price": "189",
+    "img": "file:///E:/网站图片/O1CN01gRcFSx2GdShax5zZW_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.05-07.06",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_新橙音乐节_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_新橙音乐节_成都站.html"
+  },
+  {
+    "title": "2025仙人掌音乐节",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都东安湖文化旅游区",
+    "price": "299",
+    "img": "file:///E:/网站图片/O1CN01arci902GdShprt5NZ_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.26 16:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_2025仙人掌音乐节.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_2025仙人掌音乐节.html"
+  },
+  {
+    "title": "郁可唯\"我怪怪\"2025巡回演唱会-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都金牛区演艺中心",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN011dh15P2GdShp5VVUk_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.12 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_郁可唯_我怪怪_2025巡回演唱会_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_郁可唯_我怪怪_2025巡回演唱会_成都站.html"
+  },
+  {
+    "title": "黄龄「青春会更妙」巡演-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "正火艺术中心1号馆",
+    "price": "360",
+    "img": "file:///E:/网站图片/O1CN01oniAMH2GdSiAlSS2E_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_黄龄_青春会更妙_巡演_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_黄龄_青春会更妙_巡演_成都站.html"
+  },
+  {
+    "title": "时代俊峰主题演绎 | 偶像宇宙JCN 2.0",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "锦江区成都市演艺集团东风路场地中心",
+    "price": "48",
+    "img": "file:///E:/网站图片/O1CN01iucWG22GdShzSObG3_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 17:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_时代俊峰主题演绎_偶像宇宙JCN_2_0.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_时代俊峰主题演绎_偶像宇宙JCN_2_0.html"
+  },
+  {
+    "title": "霉粉必看@TayMe |《Cruel Summer》Taylor金曲演唱会·燃爆仲夏！（成都站）",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "正火艺术中心6号馆",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01bDaNS02GdSiAil0Qd_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.02 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_霉粉必看_TayMe_Cruel_Summer_Taylor金曲演唱会_燃爆仲夏_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_霉粉必看_TayMe_Cruel_Summer_Taylor金曲演唱会_燃爆仲夏_成都站.html"
+  },
+  {
+    "title": "8.23莓莓专场「Lover限定」Taylor Swift｜霉霉双T音乐节",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "CH8打击乐团独立完美馆",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN013uh4rD2GdShYCsSif_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.23 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_8_23莓莓专场_Lover限定_Taylor_Swift_霉霉双T音乐节.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_8_23莓莓专场_Lover限定_Taylor_Swift_霉霉双T音乐节.html"
+  },
+  {
+    "title": "欢子\"我的青春有你\"2025巡回演唱会-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都金融城演艺中心",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01lZDPr72GdShxguaI6_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_欢子_我的青春有你_2025巡回演唱会_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_欢子_我的青春有你_2025巡回演唱会_成都站.html"
+  },
+  {
+    "title": "南征北战「NEW LIFE」2025巡演 成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "TT-LIVEBOX",
+    "price": "159",
+    "img": "file:///E:/网站图片/O1CN01hWhOgF2GdSi7vAX0M_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_南征北战_NEW_LIFE_2025巡演_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_南征北战_NEW_LIFE_2025巡演_成都站.html"
+  },
+  {
+    "title": "落日飞车「Q来Q去」2025巡回演出-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "东郊记忆",
+    "price": "260",
+    "img": "file:///E:/网站图片/O1CN01RUU16A2GdSi0fMCmt_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.13 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_落日飞车_Q来Q去_2025巡回演出_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_落日飞车_Q来Q去_2025巡回演出_成都站.html"
+  },
+  {
+    "title": "许嵩2025「呼吸之野」巡回演唱会 成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都东安湖体育公园主体育场",
+    "price": "318",
+    "img": "file:///E:/网站图片/O1CN01G53RIW2GdShWLocYo_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.05 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_许嵩2025_呼吸之野_巡回演唱会_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_许嵩2025_呼吸之野_巡回演唱会_成都站.html"
+  },
+  {
+    "title": "鹿晗 Season4 亚洲巡演-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "五粮液文化体育中心综合体育馆",
+    "price": "377",
+    "img": "file:///E:/网站图片/O1CN01snXfGQ2GdSi2UTyyP_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.18/07.20 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_鹿晗_Season4_亚洲巡演_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_鹿晗_Season4_亚洲巡演_成都站.html"
+  },
+  {
+    "title": "五人组「旁美」2025巡回演唱会-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都金融城演艺中心",
+    "price": "299",
+    "img": "file:///E:/网站图片/O1CN01X23KZu2GdSi6ZcgAq_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_五人组_旁美_2025巡回演唱会_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_五人组_旁美_2025巡回演唱会_成都站.html"
+  },
+  {
+    "title": "Life After Small Town（离开小镇后的日子）艾志恒Asen2025巡回演唱会-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都金融城演艺中心",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN012h4ymN2GdShzxWfKl_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:15",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_Life_After_Small_Town_离开小镇后的日子_艾志恒Asen2025巡回演唱会_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_Life_After_Small_Town_离开小镇后的日子_艾志恒Asen2025巡回演唱会_成都站.html"
+  },
+  {
+    "title": "张碧晨 爱的史诗 2025交响限定演唱会-成都站",
+    "city": "成都",
+    "category": "演唱会",
+    "venue": "成都东安湖体育公园多功能体育馆",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01LZ7Z1f2GdShpef5UY_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.12/07.16 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "成都_张碧晨_爱的史诗_2025交响限定演唱会_成都站.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_张碧晨_爱的史诗_2025交响限定演唱会_成都站.html"
+  },
+  {
+    "title": "LIVEHOUSE之夜",
+    "city": "成都",
+    "category": "LIVEHOUSE",
+    "venue": "成都LIVEHOUSE",
+    "price": "",
+    "img": "file:///E:/网站图片/OIP-C.h3LCql2Cc4KI0EqqzKqTPgHaE7",
+    "date": "2025-07-30 21:00",
+    "tag": "LIVE",
+    "status": "售票中",
+    "path": "成都_LIVEHOUSE之夜.html",
+    "province": "四川省",
+    "detail_url": "provinces-shows/四川省/成都/details/成都_LIVEHOUSE之夜.html"
+  },
+  {
+    "title": "【天津】女性超级觉醒觉醒音乐剧《她对此感到厌烦》",
+    "city": "天津",
+    "category": "话剧歌剧",
+    "venue": "天津大剧院歌剧厅",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01cKIEaQ2GdSi3XynHc_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.11.21-11.22",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "天津_女性超级觉醒觉醒音乐剧_她对此感到厌烦.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_女性超级觉醒觉醒音乐剧_她对此感到厌烦.html"
+  },
+  {
+    "title": "【天津】2025麒麟剧社京剧专场演出：《济公活佛》（第七本）",
+    "city": "天津",
+    "category": "曲艺杂坛",
+    "venue": "中华剧院",
+    "price": "188",
+    "img": "file:///E:/网站图片/O1CN01vcstay2GdSi2kBJg0_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.30 周三 19:15",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "天津_2025麒麟剧社京剧专场演出_济公活佛_第七本.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_2025麒麟剧社京剧专场演出_济公活佛_第七本.html"
+  },
+  {
+    "title": "【天津】2025美依礼芽 MARiA 美的唐言演唱会-天津站",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津市人民体育馆",
+    "price": "398",
+    "img": "file:///E:/网站图片/O1CN01k5D2Ai2GdSi3EGr8J_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.05 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_2025美依礼芽_MARiA_美的唐言演唱会_天津站.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_2025美依礼芽_MARiA_美的唐言演唱会_天津站.html"
+  },
+  {
+    "title": "【天津】单立人喜剧演出季「我们是冠军」| 单口喜剧|脱口秀",
+    "city": "天津",
+    "category": "曲艺杂坛",
+    "venue": "天津海河剧院",
+    "price": "160",
+    "img": "file:///E:/网站图片/O1CN010xN3LH2GdSi4sULjA_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "天津_单立人喜剧演出季_我们是冠军_单口喜剧_脱口秀.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_单立人喜剧演出季_我们是冠军_单口喜剧_脱口秀.html"
+  },
+  {
+    "title": "【天津】小野丽莎2025巡回演唱会-天津跨年专场",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津礼堂大剧场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01kj6gI72GdShp198vp_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.12.31 周三 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_小野丽莎2025巡回演唱会_天津跨年专场.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_小野丽莎2025巡回演唱会_天津跨年专场.html"
+  },
+  {
+    "title": "【天津】开心麻花综艺同款原创爆笑新喜剧《整个人喜剧》",
+    "city": "天津",
+    "category": "话剧歌剧",
+    "venue": "天津大剧院多功能厅",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN01GBVVu32GdSh0KPOky_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.20",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "天津_开心麻花综艺同款原创爆笑新喜剧_整个人喜剧.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_开心麻花综艺同款原创爆笑新喜剧_整个人喜剧.html"
+  },
+  {
+    "title": "【天津】音乐剧《寻找李二狗》",
+    "city": "天津",
+    "category": "话剧歌剧",
+    "venue": "天津大剧院歌剧厅",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01NKi4t32GdShiOFjqC_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.18-07.19",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "天津_音乐剧_寻找李二狗.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_音乐剧_寻找李二狗.html"
+  },
+  {
+    "title": "【天津】四海福临2025德云社张鹤伦·郎鹤炎相声专场-天津站",
+    "city": "天津",
+    "category": "曲艺杂坛",
+    "venue": "天津礼堂大剧场",
+    "price": "299",
+    "img": "file:///E:/网站图片/O1CN01HA1yPv2GdShd8xoye_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "天津_四海福临2025德云社张鹤伦_郎鹤炎相声专场_天津站.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_四海福临2025德云社张鹤伦_郎鹤炎相声专场_天津站.html"
+  },
+  {
+    "title": "【天津】张学友60+巡回演唱会天津站",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津奥林匹克中心体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01l7R6TH2GdSi7zkNes_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.25-08.03",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_张学友60_巡回演唱会天津站.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_张学友60_巡回演唱会天津站.html"
+  },
+  {
+    "title": "【天津】李雨霏-霏常之约 2025 巡回演唱会-天津站",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "中华剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01xO5CJ12GdSi4QWEtw_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_李雨霏_霏常之约_2025_巡回演唱会_天津站.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_李雨霏_霏常之约_2025_巡回演唱会_天津站.html"
+  },
+  {
+    "title": "【天津】Rapeter 吴嘉轩 2025pogo红人节（天津欢乐谷）",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津欢乐谷",
+    "price": "230",
+    "img": "file:///E:/网站图片/O1CN01iCBKbU2GdSi4gX2mw_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.02 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_Rapeter_吴嘉轩_2025pogo红人节_天津欢乐谷.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_Rapeter_吴嘉轩_2025pogo红人节_天津欢乐谷.html"
+  },
+  {
+    "title": "【天津】五条人2025「地球恋曲」剧场巡演",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津大剧院歌剧厅",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01m1Zixa2GdSi084PB1_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.02 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_五条人2025_地球恋曲_剧场巡演.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_五条人2025_地球恋曲_剧场巡演.html"
+  },
+  {
+    "title": "【天津】沙一汀TEL 2025pogo红人节（天津欢乐谷）",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津欢乐谷",
+    "price": "230",
+    "img": "file:///E:/网站图片/O1CN01yrPpYo2GdShy1W1ss_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_沙一汀TEL_2025pogo红人节_天津欢乐谷.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_沙一汀TEL_2025pogo红人节_天津欢乐谷.html"
+  },
+  {
+    "title": "【天津】ONER 2025pogo红人节（天津欢乐谷）",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津欢乐谷",
+    "price": "230",
+    "img": "file:///E:/网站图片/O1CN01etG1XS2GdSi2rzDqT_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.12 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_ONER_2025pogo红人节_天津欢乐谷.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_ONER_2025pogo红人节_天津欢乐谷.html"
+  },
+  {
+    "title": "【天津】Rapeter 晏壹轩 2025pogo红人节（天津欢乐谷）",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津欢乐谷",
+    "price": "230",
+    "img": "file:///E:/网站图片/O1CN01iCBKbU2GdSi4gX2mw_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.02 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_Rapeter_晏壹轩_2025pogo红人节_天津欢乐谷.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_Rapeter_晏壹轩_2025pogo红人节_天津欢乐谷.html"
+  },
+  {
+    "title": "【天津】林忆莲《回响Resonance》2025巡回演唱会-天津站",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津奥林匹克中心体育场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01XBXBoS2GdShqUAzKD_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.09.13 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_林忆莲_回响Resonance_2025巡回演唱会_天津站.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_林忆莲_回响Resonance_2025巡回演唱会_天津站.html"
+  },
+  {
+    "title": "【天津】8.23【KPOPBOOM天津站4.0】千人KPOP狂欢音乐节",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "天津SoulSense Livehouse",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01s8C2KL2GdShtOkfEd_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.23 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_8_23_KPOPBOOM天津站4_0_千人KPOP狂欢音乐节.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_8_23_KPOPBOOM天津站4_0_千人KPOP狂欢音乐节.html"
+  },
+  {
+    "title": "【天津】李雨霏-非常之约2025巡回演唱会-天津站",
+    "city": "天津",
+    "category": "演唱会",
+    "venue": "中华剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01xO5CJ12GdSi4QWEtw_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "天津_李雨霏_非常之约2025巡回演唱会_天津站.html",
+    "province": "天津",
+    "detail_url": "provinces-shows/天津/天津/details/天津_李雨霏_非常之约2025巡回演唱会_天津站.html"
+  },
+  {
+    "title": "潘玮柏\"狂爱2.0\"巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥奥体中心体育馆",
+    "price": "",
+    "img": "file:///E:/网站图片/O1CN01vRwCR52GdShVLi89O_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.02 周六 19:00",
+    "tag": "演唱会",
+    "status": "预售中",
+    "path": "合肥_潘玮柏_狂爱2_0_巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_潘玮柏_狂爱2_0_巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "韩红2025\"我想成为你\"巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥少荃体育中心体育馆",
+    "price": "",
+    "img": "file:///E:/网站图片/O1CN01uA1ySw2GdShT4drWP_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "合肥_韩红2025_我想成为你_巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_韩红2025_我想成为你_巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "\"镜像双子\"封茗囧菌2025个唱巡演合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "OTW·梵木艺术中心",
+    "price": "",
+    "img": "file:///E:/网站图片/O1CN01mdeXvJ2GdShv6fE3x_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.16 周六 14:00",
+    "tag": "演唱会",
+    "status": "预售中",
+    "path": "合肥_镜像双子_封茗囧菌2025个唱巡演合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_镜像双子_封茗囧菌2025个唱巡演合肥站.html"
+  },
+  {
+    "title": "许嵩2025「呼吸之野」巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥体育中心体育场",
+    "price": "318",
+    "img": "file:///E:/网站图片/O1CN01bOfo1K2GdSiDv7H4E_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.02 周六 19:00",
+    "tag": "演唱会",
+    "status": "待开票",
+    "path": "合肥_许嵩2025_呼吸之野_巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_许嵩2025_呼吸之野_巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "林忆莲《回响Resonance》2025巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥体育中心体育场",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01l5zTzY2GdSi9niyN4_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.10.07 周二 19:00",
+    "tag": "演唱会",
+    "status": "待开票",
+    "path": "合肥_林忆莲_回响Resonance_2025巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_林忆莲_回响Resonance_2025巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "李宗盛2025「有歌之年」巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥少荃体育中心体育馆",
+    "price": "580",
+    "img": "file:///E:/网站图片/O1CN01sbQm0Q2GdSi09c5ac_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.27、09.29",
+    "tag": "演唱会",
+    "status": "待开票",
+    "path": "合肥_李宗盛2025_有歌之年_巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_李宗盛2025_有歌之年_巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "2025罗大佑春龙交响夜音乐会",
+    "city": "合肥",
+    "category": "音乐会",
+    "venue": "合肥大剧院歌剧剧场",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01IZo0kN2GdShs7qku8_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.20-09.21",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "合肥_合肥2025罗大佑春龙交响夜音乐会.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_合肥2025罗大佑春龙交响夜音乐会.html"
+  },
+  {
+    "title": "2025张杰未LIVE—「开往1982」世界巡回演唱会·合肥站",
+    "artist": "张杰",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥体育中心体育场",
+    "date": "2025.07.18-07.20",
+    "price": "380-1680",
+    "status": "售票中",
+    "img": "https://img.alicdn.com/bao/uploaded/https://img.alicdn.com/imgextra/i3/2251059038/O1CN01sk5Jzi2GdShRx6CnO_!!2251059038.jpg_q60.jpg_.webp",
+    "seatmap": "provinces-shows/安徽省/合肥/seatmaps/合肥_2025张杰未LIVE_开往1982_世界巡回演唱会_合肥站_seatmap.jpg",
+    "tag": "演唱会",
+    "path": "合肥_2025张杰未LIVE_开往1982_世界巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_2025张杰未LIVE_开往1982_世界巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "黄子弘凡2025\"除了快乐禁止入内\"巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥少荃体育中心体育馆",
+    "price": "480-1280",
+    "img": "file:///E:/网站图片/黄子弘凡2025_除了快乐禁止入内_巡回演唱会_合肥站.jpg",
+    "date": "2025.08.16-08.17",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "details/合肥_黄子弘凡2025_除了快乐禁止入内_巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_黄子弘凡2025_除了快乐禁止入内_巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "李荣浩2025\"黑马\"世界巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥体育中心体育场",
+    "price": "380-1080",
+    "img": "file:///E:/网站图片/李荣浩2025_黑马_世界巡回演唱会_合肥站.jpg",
+    "date": "2025.09.20 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "details/合肥_李荣浩2025_黑马_世界巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_李荣浩2025_黑马_世界巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "张靓颖2025\"追\"巡回演唱会-合肥站",
+    "city": "合肥",
+    "category": "演唱会",
+    "venue": "合肥少荃体育中心体育馆",
+    "price": "480-1380",
+    "img": "file:///E:/网站图片/张靓颖2025_追_巡回演唱会_合肥站.jpg",
+    "date": "2025.08.30 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "details/合肥_张靓颖2025_追_巡回演唱会_合肥站.html",
+    "province": "安徽省",
+    "detail_url": "provinces-shows/安徽省/合肥/details/合肥_张靓颖2025_追_巡回演唱会_合肥站.html"
+  },
+  {
+    "title": "【广州】2025 五人组「拳贵」巡回演唱会-广州站",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "广州体育馆1号馆",
+    "price": "299",
+    "img": "file:///E:/网站图片/O1CN01FpBwqT2GdShrsvSyG_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_2025_五人组_拳贵_巡回演唱会_广州站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_2025_五人组_拳贵_巡回演唱会_广州站.html"
+  },
+  {
+    "title": "【广州】朱孝天\"启点的起点\"巡回演唱会",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "广州中山纪念堂",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN0172Ewfu2GdSi0HRwQr_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.10 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_朱孝天_启点的起点_巡回演唱会.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_朱孝天_启点的起点_巡回演唱会.html"
+  },
+  {
+    "title": "【广州】2025 陈小春 生·旦·净·末·丑 巡回演唱会-广州站",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "宝能广州国际体育演艺中心",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01qpwJLi2GdShRoel7A_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_2025_陈小春_生_旦_净_末_丑_巡回演唱会_广州站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_2025_陈小春_生_旦_净_末_丑_巡回演唱会_广州站.html"
+  },
+  {
+    "title": "【广州】8.29霉霉专场「Lover七夕限定」Taylor Swift｜霉粉狂欢音乐节",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "池沼 CHIZHAO LIVEHOUSE",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01t0U9nv2GdShe0MUbq_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_8_29霉霉专场_Lover七夕限定_Taylor_Swift_霉粉狂欢音乐节.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_8_29霉霉专场_Lover七夕限定_Taylor_Swift_霉粉狂欢音乐节.html"
+  },
+  {
+    "title": "状况外 蔡靖萱巡回演唱会-广州站",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "广州亚运城综合体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01kWUyFD2GdShn5sU5A_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.30 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_状况外_蔡靖萱巡回演唱会_广州站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_状况外_蔡靖萱巡回演唱会_广州站.html"
+  },
+  {
+    "title": "南征北战「NEW LIFE」2025巡演 广州站",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "大麦66LIVEHOUSE广州",
+    "price": "159",
+    "img": "file:///E:/网站图片/O1CN01wXko1o2GdSi5m2ZWp_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_南征北战_NEW_LIFE_2025巡演_广州站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_南征北战_NEW_LIFE_2025巡演_广州站.html"
+  },
+  {
+    "title": "欢子\"我的青春有你\"2025巡回演唱会-广州站",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "广州体育馆1号馆",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN011piJbG2GdShwYEVFZ_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_欢子_我的青春有你_2025巡回演唱会_广州站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_欢子_我的青春有你_2025巡回演唱会_广州站.html"
+  },
+  {
+    "title": "2025斯外戈【起点】巡演（广州站）",
+    "city": "广州",
+    "category": "演唱会",
+    "venue": "MAO Livehouse 广州(太古仓店)",
+    "price": "256",
+    "img": "file:///E:/网站图片/O1CN01ATpDx42GdShjY4zs7_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.12 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "广州_2025斯外戈_起点_巡演_广州站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_2025斯外戈_起点_巡演_广州站.html"
+  },
+  {
+    "title": "魔幻之夜魔术秀",
+    "city": "广州",
+    "category": "曲艺相声",
+    "venue": "广州大剧院",
+    "price": "",
+    "img": "file:///E:/网站图片/OIP-C.4ZebfqnrLC-mYQSA6P6U9wHaE7",
+    "date": "2025-07-15 20:00",
+    "tag": "特惠",
+    "status": "售票中",
+    "path": "广州_魔幻之夜魔术秀.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/广州/details/广州_魔幻之夜魔术秀.html"
+  },
+  {
+    "title": "【深圳】深圳·张远 2025夏浪狂欢节（深圳欢乐谷）",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳欢乐谷",
+    "price": "130",
+    "img": "file:///E:/网站图片/O1CN018X5YQt2GdShz9kBTR_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.03 周日",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_深圳_张远_2025夏浪狂欢节_深圳欢乐谷.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_深圳_张远_2025夏浪狂欢节_深圳欢乐谷.html"
+  },
+  {
+    "title": "【深圳】丁当Della -《夜游 A Night Tour》2025巡回演唱会 深圳站",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳龙华文体中心体育馆",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN01OKlzTH2GdShrjpstW_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_丁当Della_夜游_A_Night_Tour_2025巡回演唱会_深圳站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_丁当Della_夜游_A_Night_Tour_2025巡回演唱会_深圳站.html"
+  },
+  {
+    "title": "【深圳】深圳·沙一汀JTEL 2025夏浪狂欢节（深圳欢乐谷）",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳欢乐谷",
+    "price": "130",
+    "img": "file:///E:/网站图片/O1CN01yrseg02GdSi0EtDhH_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.12 周六",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_深圳_沙一汀JTEL_2025夏浪狂欢节_深圳欢乐谷.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_深圳_沙一汀JTEL_2025夏浪狂欢节_深圳欢乐谷.html"
+  },
+  {
+    "title": "【深圳】深圳·ONER 2025夏浪狂欢节（深圳欢乐谷）",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳欢乐谷",
+    "price": "130",
+    "img": "file:///E:/网站图片/O1CN01QbyxwI2GdShz1JcET_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_深圳_ONER_2025夏浪狂欢节_深圳欢乐谷.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_深圳_ONER_2025夏浪狂欢节_深圳欢乐谷.html"
+  },
+  {
+    "title": "【深圳】深圳世界之窗WoW嗨啤音浪季-王以太",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳世界之窗",
+    "price": "110",
+    "img": "file:///E:/网站图片/O1CN01vDrAU82GdSi3uNZCv_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.26 周六 09:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_深圳世界之窗WoW嗨啤音浪季_王以太.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_深圳世界之窗WoW嗨啤音浪季_王以太.html"
+  },
+  {
+    "title": "【深圳】深圳世界之窗WoW嗨啤音浪季-银河快递",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳世界之窗",
+    "price": "110",
+    "img": "file:///E:/网站图片/O1CN01N1LJ6x2GdSiBhpQvq_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.16 周六 09:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_深圳世界之窗WoW嗨啤音浪季_银河快递.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_深圳世界之窗WoW嗨啤音浪季_银河快递.html"
+  },
+  {
+    "title": "【深圳】7.11霉霉专场【Lover限定】Taylor Swift 霉粉狂欢音乐节",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "MAO Livehouse深圳(海上世界)",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01QyFoUT2GdShg3IMM4_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.11 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_7_11霉霉专场_Lover限定_Taylor_Swift_霉粉狂欢音乐节.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_7_11霉霉专场_Lover限定_Taylor_Swift_霉粉狂欢音乐节.html"
+  },
+  {
+    "title": "【深圳】2025 吉克隽逸「太阳的女儿」巡回演唱会-深圳站",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "深圳市体育中心体育馆(主馆)",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01OPRqlT2GdShhKkfrx_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_2025_吉克隽逸_太阳的女儿_巡回演唱会_深圳站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_2025_吉克隽逸_太阳的女儿_巡回演唱会_深圳站.html"
+  },
+  {
+    "title": "【深圳】Cindy袁咏琳2025巡回演唱会-深圳站",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "南山文体中心聚橙剧院 大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01xfd5lN2GdShuSB8Mi_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.17 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_Cindy袁咏琳2025巡回演唱会_深圳站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_Cindy袁咏琳2025巡回演唱会_深圳站.html"
+  },
+  {
+    "title": "【深圳】名侦探柯南 连载30周年纪念展",
+    "city": "深圳",
+    "category": "展览休闲",
+    "venue": "One Avenue卓悦中心",
+    "price": "79",
+    "img": "file:///E:/网站图片/O1CN01lKoKCj2GdSi30Q282_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.05-08.31",
+    "tag": "展览休闲",
+    "status": "售票中",
+    "path": "深圳_名侦探柯南_连载30周年纪念展.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_名侦探柯南_连载30周年纪念展.html"
+  },
+  {
+    "title": "【深圳】张鑫「Untitled」2025巡回音乐会 深圳站",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "NUBOND AIR",
+    "price": "77",
+    "img": "file:///E:/网站图片/O1CN01kMbHOo2GdShzECBrt_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.15 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_张鑫_Untitled_2025巡回音乐会_深圳站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_张鑫_Untitled_2025巡回音乐会_深圳站.html"
+  },
+  {
+    "title": "【深圳】女性觉醒超燃音乐剧《她对此感到厌烦》",
+    "city": "深圳",
+    "category": "话剧歌剧",
+    "venue": "万象天地剧场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01h7N0TY2GdSi4Iv42T_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.09.20-09.21",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "深圳_女性觉醒超燃音乐剧_她对此感到厌烦.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_女性觉醒超燃音乐剧_她对此感到厌烦.html"
+  },
+  {
+    "title": "【深圳】南征北战【NEW LIFE】2025巡演 深圳站",
+    "city": "深圳",
+    "category": "演唱会",
+    "venue": "NUBOND AIR",
+    "price": "159",
+    "img": "file:///E:/网站图片/O1CN01bSed2i2GdSi589nIH_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.08 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "深圳_南征北战_NEW_LIFE_2025巡演_深圳站.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_南征北战_NEW_LIFE_2025巡演_深圳站.html"
+  },
+  {
+    "title": "【深圳】摇滚音乐剧《TRACE U》（《追寻你》）",
+    "city": "深圳",
+    "category": "话剧歌剧",
+    "venue": "万象天地剧场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01So0TfM2GdSi3fYSO4_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.09.06-09.07",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "深圳_摇滚音乐剧_TRACE_U_追寻你.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_摇滚音乐剧_TRACE_U_追寻你.html"
+  },
+  {
+    "title": "【深圳】限量特惠丨福田COCOPark脱口秀丨知名大咖不定时空降丨笑点密集放松解压丨幽默油条喜剧×购物公园",
+    "city": "深圳",
+    "category": "曲艺杂坛",
+    "venue": "幽默油条剧场(福田COCOPark店)",
+    "price": "29",
+    "img": "file:///E:/网站图片/O1CN01eGIqcY2GdShqqq6sp_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.31",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "深圳_限量特惠丨福田COCOPark脱口秀丨知名大咖不定时空降丨笑点密集放松解压丨幽默油条喜剧_购物公园.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_限量特惠丨福田COCOPark脱口秀丨知名大咖不定时空降丨笑点密集放松解压丨幽默油条喜剧_购物公园.html"
+  },
+  {
+    "title": "【深圳】【深圳必看|双人特惠】爆笑 ！惊悚！沉浸式戏剧血染钟声之完美的犯罪1:1复原法庭现场演出｜多结局",
+    "city": "深圳",
+    "category": "话剧歌剧",
+    "venue": "深圳新空间黑匣子剧场(福田岗厦店)",
+    "price": "29.9",
+    "img": "file:///E:/网站图片/O1CN01FreLNM2GdShvngwE1_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.31",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "深圳_深圳必看_双人特惠_爆笑_惊悚_沉浸式戏剧血染钟声之完美的犯罪1_1复原法庭现场演出_多结局.html",
+    "province": "广东省",
+    "detail_url": "provinces-shows/广东省/深圳/details/深圳_深圳必看_双人特惠_爆笑_惊悚_沉浸式戏剧血染钟声之完美的犯罪1_1复原法庭现场演出_多结局.html"
+  },
+  {
+    "title": "【南京】2025年中国男篮热身赛-南京站",
+    "city": "南京",
+    "category": "体育",
+    "venue": "南京奥体中心国缘V9体育馆",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN012Acc292GdShoKp3Wj_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.27-07.29",
+    "tag": "体育",
+    "status": "售票中",
+    "path": "南京_2025年中国男篮热身赛_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_2025年中国男篮热身赛_南京站.html"
+  },
+  {
+    "title": "【南京】状况外 窦靖童巡回演唱会-南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "江苏省五台山体育中心双沟珍宝坊体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01Lkls0E2GdSha9Wzq0_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_状况外_窦靖童巡回演唱会_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_状况外_窦靖童巡回演唱会_南京站.html"
+  },
+  {
+    "title": "【南京】曾轶可「迷人的危险Captivating Danger」巡演·南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "南京太阳宫",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01JDTW252GdShaL0LrQ_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_曾轶可_迷人的危险Captivating_Danger_巡演_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_曾轶可_迷人的危险Captivating_Danger_巡演_南京站.html"
+  },
+  {
+    "title": "【南京】盛宇＜从前以后＞2025巡演-南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "1701 Live House Max",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01barwrA2GdSi6kM5ir_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.18 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_盛宇_从前以后_2025巡演_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_盛宇_从前以后_2025巡演_南京站.html"
+  },
+  {
+    "title": "【南京】Love Punch七夕限定LIVE（裘德/step.jad依加/icyball冰球乐团）",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "南京太阳宫",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN01uDJMpt2GdShzS7XcE_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_Love_Punch七夕限定LIVE_裘德_step_jad依加_icyball冰球乐团.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_Love_Punch七夕限定LIVE_裘德_step_jad依加_icyball冰球乐团.html"
+  },
+  {
+    "title": "【南京】喜剧派对@南京 和杨蒙恩/翟佳宁/史妍/大老王/大盆/小杜一起制造快乐【高笑喜剧】【无名喜剧】",
+    "city": "南京",
+    "category": "曲艺杂坛",
+    "venue": "江苏紫金大剧院",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01X6Yuh62GdSiBNjXRP_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.13 周日 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "南京_喜剧派对_南京_和杨蒙恩_翟佳宁_史妍_大老王_大盆_小杜一起制造快乐_高笑喜剧_无名喜剧.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_喜剧派对_南京_和杨蒙恩_翟佳宁_史妍_大老王_大盆_小杜一起制造快乐_高笑喜剧_无名喜剧.html"
+  },
+  {
+    "title": "【南京】朱孝天\"启点的起点\"巡回演唱会-南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "南京太阳宫",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01k7kcyq2GdShZZAa6P_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_朱孝天_启点的起点_巡回演唱会_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_朱孝天_启点的起点_巡回演唱会_南京站.html"
+  },
+  {
+    "title": "【南京】落日飞车「Q去Q来」2025巡回演出-南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "今世缘·稻香演艺中心",
+    "price": "260",
+    "img": "file:///E:/网站图片/O1CN01FMPdgd2GdSi30kEuq_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.15 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_落日飞车_Q去Q来_2025巡回演出_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_落日飞车_Q去Q来_2025巡回演出_南京站.html"
+  },
+  {
+    "title": "【南京】Standby脱口秀@南京保利大剧院【喜剧之王】卡司门路王越",
+    "city": "南京",
+    "category": "曲艺杂坛",
+    "venue": "南京保利大剧院大剧场",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01siXMSJ2GdSho9dklL_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.20 周日 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "南京_Standby脱口秀_南京保利大剧院_喜剧之王_卡司门路王越.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_Standby脱口秀_南京保利大剧院_喜剧之王_卡司门路王越.html"
+  },
+  {
+    "title": "【南京】江苏大剧院开幕运营八周年系列演出——音乐剧《寻找李二狗》",
+    "city": "南京",
+    "category": "话剧歌剧",
+    "venue": "江苏大剧院-歌剧厅",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01h2HE6j2GdShrumWgr_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.02-08.03",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "南京_江苏大剧院开幕运营八周年系列演出_音乐剧_寻找李二狗.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_江苏大剧院开幕运营八周年系列演出_音乐剧_寻找李二狗.html"
+  },
+  {
+    "title": "【南京】2025于文文「拾光」巡回演唱会-南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "南京奥体中心国缘V9体育馆",
+    "price": "388",
+    "img": "file:///E:/网站图片/O1CN01OL25PG2GdShF0Sanj_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_2025于文文_拾光_巡回演唱会_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_2025于文文_拾光_巡回演唱会_南京站.html"
+  },
+  {
+    "title": "【南京】林忆莲《回响 Resonance》2025演唱会-南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "南京奥体中心体育馆",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN010GDSJT2GdSgr9uNAG_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.12 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_林忆莲_回响_Resonance_2025演唱会_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_林忆莲_回响_Resonance_2025演唱会_南京站.html"
+  },
+  {
+    "title": "【南京】时间不够以后-「没有人能留住时光」2025巡演 南京站",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "1701 Live House Max",
+    "price": "120",
+    "img": "file:///E:/网站图片/O1CN01a9FRpT2GdSiA6GwPa_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.30 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_时间不够以后_没有人能留住时光_2025巡演_南京站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_时间不够以后_没有人能留住时光_2025巡演_南京站.html"
+  },
+  {
+    "title": "【南京】2025·南京戏剧节·张维伊、金靖、张嘉元主演舞台剧《看不见的客人》",
+    "city": "南京",
+    "category": "话剧歌剧",
+    "venue": "南京保利大剧院大剧场",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01raXaUR2GdShZtySwZ_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.26-09.27",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "南京_2025_南京戏剧节_张维伊_金靖_张嘉元主演舞台剧_看不见的客人.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_2025_南京戏剧节_张维伊_金靖_张嘉元主演舞台剧_看不见的客人.html"
+  },
+  {
+    "title": "【南京】老舍经典话剧《茶馆》专属版",
+    "city": "南京",
+    "category": "话剧歌剧",
+    "venue": "南京人民大会堂",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN015cR8eZ2GdSi5b3j0Y_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.10.11-10.12",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "南京_老舍经典话剧_茶馆_专属版.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_老舍经典话剧_茶馆_专属版.html"
+  },
+  {
+    "title": "【南京】上海歌舞团舞剧《永不消逝的电波》2025世界舞蹈剧场",
+    "city": "南京",
+    "category": "话剧歌剧",
+    "venue": "江苏大剧院-歌剧厅",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01TTBaCf2GdShUVK0VI_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.11.28-11.30",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "南京_上海歌舞团舞剧_永不消逝的电波_2025世界舞蹈剧场.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_上海歌舞团舞剧_永不消逝的电波_2025世界舞蹈剧场.html"
+  },
+  {
+    "title": "【南京】第三届1701节 南青X还潮",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "1701 Live House Max",
+    "price": "200",
+    "img": "file:///E:/网站图片/O1CN013kETQO2GdShpfSjTV_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 21:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_第三届1701节_南青X还潮.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_第三届1701节_南青X还潮.html"
+  },
+  {
+    "title": "【南京】【早鸟6折】南京市文旅消费政府补贴剧目-大型原创3D杂技魔幻剧《金箍棒》",
+    "city": "南京",
+    "category": "儿童亲子",
+    "venue": "南京文化艺术中心大剧院",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01Tle1gW2GdSi0BkOxb_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.26-08.27",
+    "tag": "儿童亲子",
+    "status": "售票中",
+    "path": "南京_早鸟6折_南京市文旅消费政府补贴剧目_大型原创3D杂技魔幻剧_金箍棒.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_早鸟6折_南京市文旅消费政府补贴剧目_大型原创3D杂技魔幻剧_金箍棒.html"
+  },
+  {
+    "title": "【南京】曹禺传世经典巨著话剧《雷雨》",
+    "city": "南京",
+    "category": "话剧歌剧",
+    "venue": "南京人民大会堂",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN01lH0G4f2GdShqf5CtD_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.09.19-09.20",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "南京_曹禺传世经典巨著话剧_雷雨.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_曹禺传世经典巨著话剧_雷雨.html"
+  },
+  {
+    "title": "【南京】7.18【KPOPBOOM南京站】BLACKPINK专场室内音乐节",
+    "city": "南京",
+    "category": "演唱会",
+    "venue": "八度空间",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01NEFVt52GdSheqBjmF_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.18 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "南京_7_18_KPOPBOOM南京站_BLACKPINK专场室内音乐节.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_7_18_KPOPBOOM南京站_BLACKPINK专场室内音乐节.html"
+  },
+  {
+    "title": "2025量子音乐节",
+    "city": "南京",
+    "category": "音乐节",
+    "venue": "南京青奥体育馆",
+    "price": "",
+    "img": "file:///E:/网站图片/OIP-C.vsj2k_sbYKf9j1RNcFpGvQHaE8",
+    "date": "2025-08-05 16:00",
+    "tag": "音乐节",
+    "status": "预售中",
+    "path": "南京_2025量子音乐节.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/南京/details/南京_2025量子音乐节.html"
+  },
+  {
+    "title": "五条人2025「地球恋曲」剧场巡演-苏州站",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "昆山文化艺术中心·大剧场",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN019HLNED2GdShtCc7jK_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.30 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_五条人2025_地球恋曲_剧场巡演_苏州站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_五条人2025_地球恋曲_剧场巡演_苏州站.html"
+  },
+  {
+    "title": "2025超燃·焰火音乐嘉年华-苏州站",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "苏州南环新城市翰翔体育大草坪",
+    "price": "119",
+    "img": "file:///E:/网站图片/O1CN01pN00v72GdShxmRYWa_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.12 周六 18:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_2025超燃_焰火音乐嘉年华_苏州站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_2025超燃_焰火音乐嘉年华_苏州站.html"
+  },
+  {
+    "title": "2025新裤子「北海怪兽」巡回演唱会-苏州站",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "苏州市体育中心体育场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01WgKLxY2GdShN46VkW_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.05 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_2025新裤子_北海怪兽_巡回演唱会_苏州站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_2025新裤子_北海怪兽_巡回演唱会_苏州站.html"
+  },
+  {
+    "title": "张栋梁「第21个故事」巡回演唱会-苏州站",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "苏州市体育中心体育馆",
+    "price": "488",
+    "img": "file:///E:/网站图片/O1CN014lmRYT2GdShaYMRLk_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_张栋梁_第21个故事_巡回演唱会_苏州站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_张栋梁_第21个故事_巡回演唱会_苏州站.html"
+  },
+  {
+    "title": "金润吉声声音2025巡回演唱会-苏州站",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "苏州保利大剧院·大剧场",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01687uN82GdShqpzm6Q_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_金润吉声声音2025巡回演唱会_苏州站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_金润吉声声音2025巡回演唱会_苏州站.html"
+  },
+  {
+    "title": "2025胡海泉《流浪食堂童》演唱会-苏州站",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "苏州柳北剧院·大剧场",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01ft481B2GdShRefbs8_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_2025胡海泉_流浪食堂童_演唱会_苏州站.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_2025胡海泉_流浪食堂童_演唱会_苏州站.html"
+  },
+  {
+    "title": "7.19【KPOPBOOM苏州站3.0】室内KPOP狂欢音乐节",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "山丘livehouse红唐店",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01ZKKYqd2GdShSm3GSg_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_7_19_KPOPBOOM苏州站3_0_室内KPOP狂欢音乐节.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_7_19_KPOPBOOM苏州站3_0_室内KPOP狂欢音乐节.html"
+  },
+  {
+    "title": "夏川里美2025巡演 苏州演唱会",
+    "city": "苏州",
+    "category": "演唱会",
+    "venue": "苏州文化艺术中心·大剧院",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01JwIpwG2GdShg5oakj_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.12 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "苏州_夏川里美2025巡演_苏州演唱会.html",
+    "province": "江苏省",
+    "detail_url": "provinces-shows/江苏省/苏州/details/苏州_夏川里美2025巡演_苏州演唱会.html"
+  },
+  {
+    "title": "【洛阳】互动喜剧秀《胡来的周末》",
+    "city": "洛阳",
+    "category": "曲艺杂坛",
+    "venue": "正大文化交流中心",
+    "price": "78",
+    "img": "file:///E:/网站图片/O1CN01wtPMjg2GdSi5ZsEqA_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.02 周六 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "洛阳_互动喜剧秀_胡来的周末.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_互动喜剧秀_胡来的周末.html"
+  },
+  {
+    "title": "【洛阳】《爱·永恒》理查德·克莱德曼钢琴音乐会——洛阳站",
+    "city": "洛阳",
+    "category": "音乐会",
+    "venue": "洛阳市新区歌剧院",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01V2m5zk2GdShTNzAZy_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.17 周日 19:30",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "洛阳_爱_永恒_理查德_克莱德曼钢琴音乐会_洛阳站.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_爱_永恒_理查德_克莱德曼钢琴音乐会_洛阳站.html"
+  },
+  {
+    "title": "【洛阳】亚洲大型全男班现代舞秀《无名之辈》",
+    "city": "洛阳",
+    "category": "话剧歌剧",
+    "venue": "洛阳市新区歌剧院",
+    "price": "108",
+    "img": "file:///E:/网站图片/O1CN01wzEIGH2GdShZ0LicS_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.04 周五 19:30",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "洛阳_亚洲大型全男班现代舞秀_无名之辈.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_亚洲大型全男班现代舞秀_无名之辈.html"
+  },
+  {
+    "title": "【洛阳】逐鹿 Sound Lab ——百元音浪夜",
+    "city": "洛阳",
+    "category": "演唱会",
+    "venue": "洛阳拾叁堂livehouse(天心店)",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01XdXIsG2GdSi6GcdDs_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "洛阳_逐鹿_Sound_Lab_百元音浪夜.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_逐鹿_Sound_Lab_百元音浪夜.html"
+  },
+  {
+    "title": "【洛阳】话剧《面皮》",
+    "city": "洛阳",
+    "category": "话剧歌剧",
+    "venue": "正大文化交流中心",
+    "price": "140",
+    "img": "file:///E:/网站图片/O1CN01N3etzE2GdSi8W0a88_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.05",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "洛阳_话剧_面皮.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_话剧_面皮.html"
+  },
+  {
+    "title": "【洛阳】大型原创舞剧《王阳明》",
+    "city": "洛阳",
+    "category": "话剧歌剧",
+    "venue": "正大文化交流中心",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01D67HSN2GdSgtKxNmm_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.15-09.16",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "洛阳_大型原创舞剧_王阳明.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_大型原创舞剧_王阳明.html"
+  },
+  {
+    "title": "【洛阳】《卡农 Canon In D》世界经典名曲音乐会",
+    "city": "洛阳",
+    "category": "音乐会",
+    "venue": "正大文化交流中心",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN0119aXyp2GdSgmQrjgd_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.10.18 周六 19:30",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "洛阳_卡农_Canon_In_D_世界经典名曲音乐会.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_卡农_Canon_In_D_世界经典名曲音乐会.html"
+  },
+  {
+    "title": "【洛阳】2025年洛阳市\"中原文化大舞台\"儿童剧《小美人鱼》",
+    "city": "洛阳",
+    "category": "儿童亲子",
+    "venue": "正大文化交流中心",
+    "price": "20",
+    "img": "file:///E:/网站图片/O1CN01jQ9zXu2GdSiAl2Bim_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.15 周二 19:30",
+    "tag": "儿童亲子",
+    "status": "售票中",
+    "path": "洛阳_2025年洛阳市_中原文化大舞台_儿童剧_小美人鱼.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_2025年洛阳市_中原文化大舞台_儿童剧_小美人鱼.html"
+  },
+  {
+    "title": "【洛阳】顶楼喜剧｜【特价优惠】每周三、四脱口秀，新喜剧盲盒秀｜高复购不踩雷",
+    "city": "洛阳",
+    "category": "曲艺杂坛",
+    "venue": "唯喜戏剧中心",
+    "price": "29.9",
+    "img": "file:///E:/网站图片/O1CN01plbYcd2GdSh4KDLFf_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.09-07.31",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "洛阳_顶楼喜剧_特价优惠_每周三_四脱口秀_新喜剧盲盒秀_高复购不踩雷.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_顶楼喜剧_特价优惠_每周三_四脱口秀_新喜剧盲盒秀_高复购不踩雷.html"
+  },
+  {
+    "title": "【洛阳】《千年等一回》传世国风音乐会",
+    "city": "洛阳",
+    "category": "音乐会",
+    "venue": "正大文化交流中心",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01V5LoAM2GdShZoh5ia_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.26 周五 19:30",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "洛阳_千年等一回_传世国风音乐会.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_千年等一回_传世国风音乐会.html"
+  },
+  {
+    "title": "【洛阳】2025年洛阳市\"中原文化大舞台\"儿童剧《狮子王》",
+    "city": "洛阳",
+    "category": "儿童亲子",
+    "venue": "正大文化交流中心",
+    "price": "20",
+    "img": "file:///E:/网站图片/O1CN01Mi8WWK2GdShaxTAlm_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.14 周一 19:30",
+    "tag": "儿童亲子",
+    "status": "售票中",
+    "path": "洛阳_2025年洛阳市_中原文化大舞台_儿童剧_狮子王.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_2025年洛阳市_中原文化大舞台_儿童剧_狮子王.html"
+  },
+  {
+    "title": "【洛阳】亚洲大型全男班「雨舞秀」《躲亮·狂想》（荷尔蒙之夜）",
+    "city": "洛阳",
+    "category": "话剧歌剧",
+    "venue": "正大文化交流中心",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN01mlLjh92GdShZH9mMZ_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.27-08.28",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "洛阳_亚洲大型全男班_雨舞秀_躲亮_狂想_荷尔蒙之夜.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_亚洲大型全男班_雨舞秀_躲亮_狂想_荷尔蒙之夜.html"
+  },
+  {
+    "title": "【洛阳】G.E.M.邓紫棋 I AM GLORIA世界巡回演唱会2.0 - 洛阳站",
+    "city": "洛阳",
+    "category": "演唱会",
+    "venue": "洛阳市奥林匹克中心体育场",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01BWwt642GdSiB0c4OC_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.26-07.27",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "洛阳_G_E_M_邓紫棋_I_AM_GLORIA世界巡回演唱会2_0_洛阳站.html",
+    "province": "河南省",
+    "detail_url": "provinces-shows/河南省/洛阳/details/洛阳_G_E_M_邓紫棋_I_AM_GLORIA世界巡回演唱会2_0_洛阳站.html"
+  },
+  {
+    "title": "\"不如见一面\"海来阿木2025巡回演唱会-杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "黄龙体育中心体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01eOvvYn2GdShsxYB6K_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_不如见一面_海来阿木2025巡回演唱会_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_不如见一面_海来阿木2025巡回演唱会_杭州站.html"
+  },
+  {
+    "title": "8.9霉霉专场「Lover限定」Taylor Swift｜霉粉狂欢音乐节",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "MAO Livehouse杭州",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01gQUx0x2GdShg4Extq_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.09 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_8_9霉霉专场_Lover限定_Taylor_Swift_霉粉狂欢音乐节.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_8_9霉霉专场_Lover限定_Taylor_Swift_霉粉狂欢音乐节.html"
+  },
+  {
+    "title": "王祖蓝2025\"大世界里的我\"巡回演唱会-杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "黄龙体育中心体育馆",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01q1LkhX2GdShptYLGr_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_王祖蓝2025_大世界里的我_巡回演唱会_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_王祖蓝2025_大世界里的我_巡回演唱会_杭州站.html"
+  },
+  {
+    "title": "张鑫【Untitled】2025巡回音乐会 杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "SoFun Live 杭州",
+    "price": "77",
+    "img": "file:///E:/网站图片/O1CN01MpJ07x2GdSi7xQEzl_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_张鑫_Untitled_2025巡回音乐会_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_张鑫_Untitled_2025巡回音乐会_杭州站.html"
+  },
+  {
+    "title": "【加场】step.jad依加「Nightstep夜奔！」2025巡演杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "SoFun Live 杭州",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN01eBD2oy2GdShqbFn7Z_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.03 周日 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_step_jad依加_Nightstep夜奔_2025巡演杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_step_jad依加_Nightstep夜奔_2025巡演杭州站.html"
+  },
+  {
+    "title": "落日飞车「Q去Q来」2025巡回演出-杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "大麦66LiveHouse杭州",
+    "price": "260",
+    "img": "file:///E:/网站图片/O1CN01Nd61dH2GdSi22EPr0_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.12 周二 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_落日飞车_Q去Q来_2025巡回演出_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_落日飞车_Q去Q来_2025巡回演出_杭州站.html"
+  },
+  {
+    "title": "KPOPFM杭州站【夏日特辑】| 千人KPOP音乐节",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "MAO Livehouse杭州",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01gsUF9E2GdSiDGigXq_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.26 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_KPOPFM杭州站_夏日特辑_千人KPOP音乐节.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_KPOPFM杭州站_夏日特辑_千人KPOP音乐节.html"
+  },
+  {
+    "title": "2025光良\"不会分离-今晚我不孤独3.0\"演唱会-杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "杭州奥体中心体育馆",
+    "price": "388",
+    "img": "file:///E:/网站图片/O1CN01iCFX8L2GdSh7RZ2xy_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.05 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_2025光良_不会分离_今晚我不孤独3_0_演唱会_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_2025光良_不会分离_今晚我不孤独3_0_演唱会_杭州站.html"
+  },
+  {
+    "title": "2025徐秉龙「木质星球」巡演 杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "大麦66LiveHouse杭州",
+    "price": "240",
+    "img": "file:///E:/网站图片/O1CN01qu6iSj2GdShxc4ZuF_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.05 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_2025徐秉龙_木质星球_巡演_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_2025徐秉龙_木质星球_巡演_杭州站.html"
+  },
+  {
+    "title": "于贞2025【PINK】巡演（杭州站）",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "SoFun Live 杭州",
+    "price": "249",
+    "img": "file:///E:/网站图片/O1CN01YGsFD52GdShdsCyaf_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.02 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_于贞2025_PINK_巡演_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_于贞2025_PINK_巡演_杭州站.html"
+  },
+  {
+    "title": "七夕超甜情歌演唱会《爱你爱到700岁》@YoungMeet（杭州站）",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "酒醉会(9-Club)",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01uzLZXZ2GdShyXVgz2_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_七夕超甜情歌演唱会_爱你爱到700岁_YoungMeet_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_七夕超甜情歌演唱会_爱你爱到700岁_YoungMeet_杭州站.html"
+  },
+  {
+    "title": "【跨越二次元】ACG神级动漫演唱会—2025艺尚音乐节",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "临千天剧院-空中舞台",
+    "price": "159",
+    "img": "file:///E:/网站图片/O1CN01mJ6f4g2GdShThxoGQ_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.04 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_ACG神级动漫演唱会_2025艺尚音乐节.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_ACG神级动漫演唱会_2025艺尚音乐节.html"
+  },
+  {
+    "title": "2025胡海泉【流浪者食堂】演唱会-杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "杭州剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01vdSWyI2GdShPcsJxX_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.27 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_2025胡海泉_流浪者食堂_演唱会_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_2025胡海泉_流浪者食堂_演唱会_杭州站.html"
+  },
+  {
+    "title": "凤凰置高机·跨世代金曲超级演唱会|\"军训\"现场·嗨翻全场",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "峰剧场(光剧院3F)-中剧场",
+    "price": "58",
+    "img": "file:///E:/网站图片/O1CN01Wbx3ib2GdSi505zMP_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_凤凰置高机_跨世代金曲超级演唱会_军训_现场_嗨翻全场.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_凤凰置高机_跨世代金曲超级演唱会_军训_现场_嗨翻全场.html"
+  },
+  {
+    "title": "「Once」叶炫清2025个人巡演杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "MAO Livehouse杭州",
+    "price": "128",
+    "img": "file:///E:/网站图片/O1CN012Rtpey2GdShuFWASe_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.11.08 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_Once_叶炫清2025个人巡演杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_Once_叶炫清2025个人巡演杭州站.html"
+  },
+  {
+    "title": "南征北战「NEW LIFE」2025巡演 杭州站",
+    "city": "杭州",
+    "category": "演唱会",
+    "venue": "SoFun Live 杭州",
+    "price": "159",
+    "img": "file:///E:/网站图片/O1CN01L6X0Qh2GdSiE0RAqU_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.09.12 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "杭州_南征北战_NEW_LIFE_2025巡演_杭州站.html",
+    "province": "浙江省",
+    "detail_url": "provinces-shows/浙江省/杭州/details/杭州_南征北战_NEW_LIFE_2025巡演_杭州站.html"
+  },
+  {
+    "title": "【武汉】极地潮音·江城之夜—音乐狂欢季",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "极地海洋度假区江城节庆广场",
+    "price": "49.9",
+    "img": "file:///E:/网站图片/O1CN01ffkH3E2GdSiBYxYB1_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.05-08.09",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_极地潮音_江城之夜_音乐狂欢季.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_极地潮音_江城之夜_音乐狂欢季.html"
+  },
+  {
+    "title": "【武汉】话剧《暗恋桃花源》经典版武汉站",
+    "city": "武汉",
+    "category": "话剧歌剧",
+    "venue": "武汉琴台大剧院",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01V5n6172GdShrbijhw_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.12-07.13",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "武汉_话剧_暗恋桃花源_经典版武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_话剧_暗恋桃花源_经典版武汉站.html"
+  },
+  {
+    "title": "【武汉】2025MC法老「生于未来」巡回演唱会——武汉站",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "光谷国际网球中心",
+    "price": "377",
+    "img": "file:///E:/网站图片/O1CN01NZ09gu2GdShVjg4jP_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_2025MC法老_生于未来_巡回演唱会_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_2025MC法老_生于未来_巡回演唱会_武汉站.html"
+  },
+  {
+    "title": "【武汉】沉浸式惊悚悬疑音乐剧《怪物》",
+    "city": "武汉",
+    "category": "话剧歌剧",
+    "venue": "联创艺空间2号导演剧场",
+    "price": "199",
+    "img": "file:///E:/网站图片/O1CN01bKRajH2GdSi9bgLlj_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.24-08.03",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "武汉_沉浸式惊悚悬疑音乐剧_怪物.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_沉浸式惊悚悬疑音乐剧_怪物.html"
+  },
+  {
+    "title": "【武汉】音乐剧《寻找李二狗》武汉站",
+    "city": "武汉",
+    "category": "话剧歌剧",
+    "venue": "武汉琴台大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01dhuTrE2GdSi7uDcN1_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.08-08.09",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "武汉_音乐剧_寻找李二狗_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_音乐剧_寻找李二狗_武汉站.html"
+  },
+  {
+    "title": "【武汉】张栋梁「第21个故事」巡回演唱会-武汉站",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "武汉五环体育中心体育馆",
+    "price": "488",
+    "img": "file:///E:/网站图片/O1CN01RuUrXt2GdSi6QG5Dq_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_张栋梁_第21个故事_巡回演唱会_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_张栋梁_第21个故事_巡回演唱会_武汉站.html"
+  },
+  {
+    "title": "【武汉】盛宇×从前以后＞2025巡演-武汉站",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "不晚in TIME LIVE",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01UnxeCU2GdSi4hFSJC_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.05 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_盛宇_从前以后_2025巡演_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_盛宇_从前以后_2025巡演_武汉站.html"
+  },
+  {
+    "title": "【武汉】英文原版音乐剧《tick,tick...BOOM!倒数时刻》",
+    "city": "武汉",
+    "category": "话剧歌剧",
+    "venue": "武汉剧院",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01VqtlpL2GdShys6M3q_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.10.16-10.19",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "武汉_英文原版音乐剧_tick_tick_BOOM_倒数时刻.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_英文原版音乐剧_tick_tick_BOOM_倒数时刻.html"
+  },
+  {
+    "title": "【武汉】舞蹈诗剧《只此青绿》—舞绘《千里江山图》武汉站",
+    "city": "武汉",
+    "category": "话剧歌剧",
+    "venue": "武汉琴台大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01ItmBhd2GdShj6YKAr_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.10.17-10.19",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "武汉_舞蹈诗剧_只此青绿_舞绘_千里江山图_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_舞蹈诗剧_只此青绿_舞绘_千里江山图_武汉站.html"
+  },
+  {
+    "title": "【武汉】舞剧《永不消逝的电波》武汉站",
+    "city": "武汉",
+    "category": "话剧歌剧",
+    "venue": "武汉琴台大剧院",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01kORG8h2GdShoSJJBP_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.12.05-12.07",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "武汉_舞剧_永不消逝的电波_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_舞剧_永不消逝的电波_武汉站.html"
+  },
+  {
+    "title": "【武汉】曾轶可「迷人的危险Captivating Danger」巡演·武汉站（返场）",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "湖北剧院",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN012zAIBY2GdShpA2D2u_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_曾轶可_迷人的危险Captivating_Danger_巡演_武汉站_返场.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_曾轶可_迷人的危险Captivating_Danger_巡演_武汉站_返场.html"
+  },
+  {
+    "title": "【武汉】《SUDDEN·慢》张杰作品展",
+    "city": "武汉",
+    "category": "展览休闲",
+    "venue": "缪斯艺术空间",
+    "price": "19.9",
+    "img": "file:///E:/网站图片/O1CN01oY4ou12GdShwbFl7f_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.06.29-10.08",
+    "tag": "展览休闲",
+    "status": "售票中",
+    "path": "武汉_SUDDEN_慢_张杰作品展.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_SUDDEN_慢_张杰作品展.html"
+  },
+  {
+    "title": "【武汉】落日飞车「Q去Q来」2025巡回演出-武汉站",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "不晚IN TIME LIVE",
+    "price": "260",
+    "img": "file:///E:/网站图片/O1CN01yqEYMH2GdSi2yyPHq_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.05 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_落日飞车_Q去Q来_2025巡回演出_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_落日飞车_Q去Q来_2025巡回演出_武汉站.html"
+  },
+  {
+    "title": "【武汉】南征北战「NEW LIFE」2025巡演 武汉站",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "MAO Livehouse武汉",
+    "price": "159",
+    "img": "file:///E:/网站图片/O1CN01E2k1Mi2GdSi7W0Bjw_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.09.21 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_南征北战_NEW_LIFE_2025巡演_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_南征北战_NEW_LIFE_2025巡演_武汉站.html"
+  },
+  {
+    "title": "【武汉】2025门尼「开门」巡演-武汉站",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "不晚IN TIME LIVE",
+    "price": "188",
+    "img": "file:///E:/网站图片/O1CN01U7gzba2GdShcalA4f_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.25 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_2025门尼_开门_巡演_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_2025门尼_开门_巡演_武汉站.html"
+  },
+  {
+    "title": "【武汉】于贞 2025「PINK」巡演（武汉站）",
+    "city": "武汉",
+    "category": "演唱会",
+    "venue": "MAOLivehouse武汉",
+    "price": "249",
+    "img": "file:///E:/网站图片/O1CN01be4KEO2GdSi4eaZPi_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.16 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "武汉_于贞_2025_PINK_巡演_武汉站.html",
+    "province": "湖北省",
+    "detail_url": "provinces-shows/湖北省/武汉/details/武汉_于贞_2025_PINK_巡演_武汉站.html"
+  },
+  {
+    "title": "【长沙】七夕超甜情歌演唱会【爱你爱到700岁 】每天都是恋爱ing！@YoungMeet（长沙站）",
+    "city": "长沙",
+    "category": "话剧歌剧",
+    "venue": "长沙梅溪湖国际文化艺术中心大剧院",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN01eZgpJ52GdShxSxO5K_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.17-09.21",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "长沙_七夕超甜情歌演唱会_爱你爱到700岁_每天都是恋爱ing_YoungMeet_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_七夕超甜情歌演唱会_爱你爱到700岁_每天都是恋爱ing_YoungMeet_长沙站.html"
+  },
+  {
+    "title": "【长沙】开心麻花经典爆笑舞台剧《乌龙山伯爵》",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "红节奏Livehouse",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01Qmzsoy2GdShyFS1rC_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_开心麻花经典爆笑舞台剧_乌龙山伯爵.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_开心麻花经典爆笑舞台剧_乌龙山伯爵.html"
+  },
+  {
+    "title": "【长沙】江辰\"记忆珍室\"2025巡演 长沙站",
+    "city": "长沙",
+    "category": "话剧歌剧",
+    "venue": "长沙梅溪湖国际文化艺术中心大剧院",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01vb6Iq62GdSi4i1Ubg_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.23-08.24",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "长沙_江辰_记忆珍室_2025巡演_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_江辰_记忆珍室_2025巡演_长沙站.html"
+  },
+  {
+    "title": "【长沙】于贞 2025「PINK」巡演（长沙站）",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "MAO Livehouse长沙(沙湾店)",
+    "price": "99",
+    "img": "file:///E:/网站图片/O1CN01UX0MM72GdShvXXc0x_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.08 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_于贞_2025_PINK_巡演_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_于贞_2025_PINK_巡演_长沙站.html"
+  },
+  {
+    "title": "【长沙】孙滢皓【Tidal Locking】全国巡演·长沙站",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "易度时光展演中心",
+    "price": "249",
+    "img": "file:///E:/网站图片/O1CN01lGAkY42GdSi517uVf_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.09.20 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_孙滢皓_Tidal_Locking_全国巡演_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_孙滢皓_Tidal_Locking_全国巡演_长沙站.html"
+  },
+  {
+    "title": "【长沙】五一广场步行街【大笑喜剧】脱口秀|周一至周日|综艺卡司|吐槽爆笑大会|开心互动|即兴之夜精品秀",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "易度时光展演中心",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN01m88JoE2GdSi4Bj9nN_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_五一广场步行街_大笑喜剧_脱口秀_周一至周日_综艺卡司_吐槽爆笑大会_开心互动_即兴之夜精品秀.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_五一广场步行街_大笑喜剧_脱口秀_周一至周日_综艺卡司_吐槽爆笑大会_开心互动_即兴之夜精品秀.html"
+  },
+  {
+    "title": "【长沙】沧元图《朝阳向你》音乐节",
+    "city": "长沙",
+    "category": "曲艺杂坛",
+    "venue": "大笑喜剧(五一广场店)",
+    "price": "39",
+    "img": "file:///E:/网站图片/O1CN01ocdzaQ2GdShx2lRu7_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.04-08.10",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "长沙_沧元图_朝阳向你_音乐节.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_沧元图_朝阳向你_音乐节.html"
+  },
+  {
+    "title": "【长沙】五条人2025「地球恋曲」剧场巡演——长沙站",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "长沙市洋湖足球公园3号球场",
+    "price": "99",
+    "img": "file:///E:/网站图片/O1CN01NUonvY2GdSi8VOorx_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 17:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_五条人2025_地球恋曲_剧场巡演_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_五条人2025_地球恋曲_剧场巡演_长沙站.html"
+  },
+  {
+    "title": "【长沙】零食很忙X赵一鸣零食 零食音乐节",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "长沙梅溪湖国际文化艺术中心大剧院",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN0124IM1b2GdSi4Tnujd_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.22 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_零食很忙X赵一鸣零食_零食音乐节.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_零食很忙X赵一鸣零食_零食音乐节.html"
+  },
+  {
+    "title": "【长沙】2025陈小春生·旦·净·末·丑巡回演唱会-长沙站",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "马栏山鸭嘴公园",
+    "price": "9.9",
+    "img": "file:///E:/网站图片/O1CN01ENrEwY2GdShlomBBe_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.11-07.13",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_2025陈小春生_旦_净_末_丑巡回演唱会_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_2025陈小春生_旦_净_末_丑巡回演唱会_长沙站.html"
+  },
+  {
+    "title": "【长沙】2025品冠哈啰 三十如一巡回演唱会 长沙站",
+    "city": "长沙",
+    "category": "演唱会",
+    "venue": "湖南国际会展中心芒果馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01cYfy1K2GdShPaCC9m_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "长沙_2025品冠哈啰_三十如一巡回演唱会_长沙站.html",
+    "province": "湖南省",
+    "detail_url": "provinces-shows/湖南省/长沙/details/长沙_2025品冠哈啰_三十如一巡回演唱会_长沙站.html"
+  },
+  {
+    "title": "【厦门】乃万「Selves们」2025限定巡演-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "沃克秀LIVEHOUSE_厦门",
+    "price": "391",
+    "img": "file:///E:/网站图片/O1CN01SWqZ4C2GdSi256Wkf_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.27 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_乃万_Selves们_2025限定巡演_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_乃万_Selves们_2025限定巡演_厦门站.html"
+  },
+  {
+    "title": "【厦门】2025胡夏《那些年·时光放映厅》巡回演唱会-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门奥林匹克体育中心-凤凰体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01oh5KW12GdShtCMl3j_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周五 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_2025胡夏_那些年_时光放映厅_巡回演唱会_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025胡夏_那些年_时光放映厅_巡回演唱会_厦门站.html"
+  },
+  {
+    "title": "【厦门】MULASAKEE2025巡演 厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "福馆Full House厦门",
+    "price": "298",
+    "img": "file:///E:/网站图片/O1CN01egkWtg2GdShrxoZJ4_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.13 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_MULASAKEE2025巡演_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_MULASAKEE2025巡演_厦门站.html"
+  },
+  {
+    "title": "【厦门】状况外 窦靖童巡回演唱会-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门集美嘉庚体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01eR8Ayt2GdSha0EcrN_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.13 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_状况外_窦靖童巡回演唱会_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_状况外_窦靖童巡回演唱会_厦门站.html"
+  },
+  {
+    "title": "【厦门】开心麻花爆笑舞台剧《婿事待发》",
+    "city": "厦门",
+    "category": "话剧歌剧",
+    "venue": "厦门开心麻花人民剧场",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01lAA9o22GdShtb193W_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.04-07.05",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "厦门_开心麻花爆笑舞台剧_婿事待发.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_开心麻花爆笑舞台剧_婿事待发.html"
+  },
+  {
+    "title": "【厦门】开心麻花悬疑作怪喜剧《同学会不会》",
+    "city": "厦门",
+    "category": "话剧歌剧",
+    "venue": "厦门开心麻花人民剧场",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN016cSPmk2GdSglgqDU5_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.18-07.19",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "厦门_开心麻花悬疑作怪喜剧_同学会不会.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_开心麻花悬疑作怪喜剧_同学会不会.html"
+  },
+  {
+    "title": "【厦门】于贞 2025「PINK」巡演（厦门站）",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门JWOKESHOW星巢沃克秀",
+    "price": "249",
+    "img": "file:///E:/网站图片/O1CN01aI4vWV2GdShJsjrdK_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.09.13 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_于贞_2025_PINK_巡演_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_于贞_2025_PINK_巡演_厦门站.html"
+  },
+  {
+    "title": "【厦门】《Make a Wish》一只肚猴个展",
+    "city": "厦门",
+    "category": "展览休闲",
+    "venue": "厦门宝龙艺术中心",
+    "price": "35",
+    "img": "file:///E:/网站图片/O1CN012coqIH2GdShrTXIpW_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.06.27-08.31",
+    "tag": "展览休闲",
+    "status": "售票中",
+    "path": "厦门_Make_a_Wish_一只肚猴个展.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_Make_a_Wish_一只肚猴个展.html"
+  },
+  {
+    "title": "【厦门】法语原版音乐剧《莫里哀》",
+    "city": "厦门",
+    "category": "话剧歌剧",
+    "venue": "闽南大戏院-大剧场",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN015k8elu2GdShgQldUR_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.10.23-10.26",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "厦门_法语原版音乐剧_莫里哀.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_法语原版音乐剧_莫里哀.html"
+  },
+  {
+    "title": "【厦门】2025.8.14-17 但丁巨著·意大利音乐剧《神曲》",
+    "city": "厦门",
+    "category": "话剧歌剧",
+    "venue": "闽南大戏院-大剧场",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN015qUuFM2GdShpUtISS_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.14-08.16",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "厦门_2025_8_14_17_但丁巨著_意大利音乐剧_神曲.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025_8_14_17_但丁巨著_意大利音乐剧_神曲.html"
+  },
+  {
+    "title": "【厦门】《对称性破缺》",
+    "city": "厦门",
+    "category": "话剧歌剧",
+    "venue": "厦门嘉庚剧院大剧场",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN01Ww2lkw2GdShErHm8x_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.09-08.10",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "厦门_对称性破缺.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_对称性破缺.html"
+  },
+  {
+    "title": "【厦门】许飞 2025《笨鸟先飞——巡回笨蛋拯救计划》厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门JWOKESHOW星巢沃克秀",
+    "price": "220",
+    "img": "file:///E:/网站图片/O1CN01NSAVvd2GdShwPi4vy_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_许飞_2025_笨鸟先飞_巡回笨蛋拯救计划_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_许飞_2025_笨鸟先飞_巡回笨蛋拯救计划_厦门站.html"
+  },
+  {
+    "title": "【厦门】JBCob林泽贤「Hello」巡演 厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "RealLive And Books",
+    "price": "150",
+    "img": "file:///E:/网站图片/O1CN01HjvnE22GdShUd6mXB_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.06 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_JBCob林泽贤_Hello_巡演_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_JBCob林泽贤_Hello_巡演_厦门站.html"
+  },
+  {
+    "title": "【厦门】2025七夕情人节\"跨越银河的委恋\"TOP情歌演唱会此情不渝，星月可鉴--厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门JWOKESHOW星巢沃克秀",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01aUXpDu2GdShuHPbJa_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_2025七夕情人节_跨越银河的委恋_TOP情歌演唱会此情不渝_星月可鉴_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025七夕情人节_跨越银河的委恋_TOP情歌演唱会此情不渝_星月可鉴_厦门站.html"
+  },
+  {
+    "title": "【厦门】旅行团乐队20周年特别呈现「下一站」2025巡回演唱会-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门集美嘉庚体育馆",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01PC0QZe2GdShnKG7Ms_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.09.20 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_旅行团乐队20周年特别呈现_下一站_2025巡回演唱会_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_旅行团乐队20周年特别呈现_下一站_2025巡回演唱会_厦门站.html"
+  },
+  {
+    "title": "【厦门】【网易云音乐 X KPOPCN】YG专场 千人KPOP派对（厦门站）",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "福馆Full House厦门",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01NmeR6d2GdSghR5CJI_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.18 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_网易云音乐_X_KPOPCN_YG专场_千人KPOP派对_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_网易云音乐_X_KPOPCN_YG专场_千人KPOP派对_厦门站.html"
+  },
+  {
+    "title": "【厦门】\"镜像双子\"封茗囧菌2025个唱巡演厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "福馆Full House厦门",
+    "price": "267",
+    "img": "file:///E:/网站图片/O1CN01jeXGjK2GdSi2QFB14_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.19 周六 14:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_镜像双子_封茗囧菌2025个唱巡演厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_镜像双子_封茗囧菌2025个唱巡演厦门站.html"
+  },
+  {
+    "title": "【厦门】2025陈小春 生日·净·未·丑 巡回演唱会-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门奥林匹克体育中心-凤凰体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01EWVDqp2GdShZRHT33_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_2025陈小春_生日_净_未_丑_巡回演唱会_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025陈小春_生日_净_未_丑_巡回演唱会_厦门站.html"
+  },
+  {
+    "title": "【厦门】2025.8.10 新型关系2.0 颜怡颜悦脱口秀专场",
+    "city": "厦门",
+    "category": "曲艺杂坛",
+    "venue": "闽南大戏院",
+    "price": "150",
+    "img": "file:///E:/网站图片/O1CN011XGSd12GdShbDlCcJ_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.10 周日 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "厦门_2025_8_10_新型关系2_0_颜怡颜悦脱口秀专场.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025_8_10_新型关系2_0_颜怡颜悦脱口秀专场.html"
+  },
+  {
+    "title": "【厦门】2025.8.30 胡海泉【流浪者食堂】演唱会-厦门站（980元含合影权益）",
+    "city": "厦门",
+    "category": "音乐会",
+    "venue": "闽南大戏院",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN01SVPT7e2GdShQ0XbZA_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.30 周六 19:30",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "厦门_2025_8_30_胡海泉_流浪者食堂_演唱会_厦门站_980元含合影权益.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025_8_30_胡海泉_流浪者食堂_演唱会_厦门站_980元含合影权益.html"
+  },
+  {
+    "title": "【厦门】《直到世界尽头》上杉升2025巡演-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门工人体育馆",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01EbRRB62GdShr8yktM_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_直到世界尽头_上杉升2025巡演_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_直到世界尽头_上杉升2025巡演_厦门站.html"
+  },
+  {
+    "title": "【厦门】四海福临2025德云社德云三筱相声专场演出-厦门站",
+    "city": "厦门",
+    "category": "曲艺杂坛",
+    "venue": "闽南大戏院-大剧场",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN0163Z3Lt2GdShXuoGsF_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.13 周日 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "厦门_四海福临2025德云社德云三筱相声专场演出_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_四海福临2025德云社德云三筱相声专场演出_厦门站.html"
+  },
+  {
+    "title": "【厦门】王心凌SUGAR HIGH2.0个人演唱会-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门奥林匹克体育中心-凤凰体育馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01ctRuh82GdShsP7Vjr_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.05-07.06",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_王心凌SUGAR_HIGH2_0个人演唱会_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_王心凌SUGAR_HIGH2_0个人演唱会_厦门站.html"
+  },
+  {
+    "title": "【厦门】2025苏见信「尽兴而活」巡回演唱会-厦门站",
+    "city": "厦门",
+    "category": "演唱会",
+    "venue": "厦门奥林匹克体育中心-凤凰体育馆",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01aI4vWV2GdShJsjrdK_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "厦门_2025苏见信_尽兴而活_巡回演唱会_厦门站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/厦门/details/厦门_2025苏见信_尽兴而活_巡回演唱会_厦门站.html"
+  },
+  {
+    "title": "7月12日声音不息港台经典超级金曲演唱会",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "MoliLive茉莉空间",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01WZbdt92GdShovvyzB_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州7月12日声音不息港台经典超级金曲演唱会.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州7月12日声音不息港台经典超级金曲演唱会.html"
+  },
+  {
+    "title": "7月12日声音不息港台经典超级金曲演唱会",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "福州大学城文化艺术中心",
+    "price": "50",
+    "img": "file:///E:/网站图片/O1CN01DbzFSO2GdShDmYnd8_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.12 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州7月12日声音不息港台经典超级金曲演唱会.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州7月12日声音不息港台经典超级金曲演唱会.html"
+  },
+  {
+    "title": "MISTERKCIALLO WORLD巡演 福州站 -Anime Slayer 2025",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "唯美萱MAKERLIVE(三盛33)",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01c5wUEE2GdShycMO5I_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.05 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州MISTERKCIALLO_WORLD巡演_福州站_Anime_Slayer_2025.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州MISTERKCIALLO_WORLD巡演_福州站_Anime_Slayer_2025.html"
+  },
+  {
+    "title": "七夕超甜情歌演唱会爱你爱到700岁每天都是恋爱ing！@YoungMeet福州站",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "唯美萱MAKERLIVE(三盛33)",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01N4eEA42GdSiCMoTPA_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州七夕超甜情歌演唱会爱你爱到700岁每天都是恋爱ing_YoungMeet福州站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州七夕超甜情歌演唱会爱你爱到700岁每天都是恋爱ing_YoungMeet福州站.html"
+  },
+  {
+    "title": "葡萄不愤怒乐队Lucky Star2025巡演 福州站",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "唯美萱MAKERLIVE(三盛33)",
+    "price": "99",
+    "img": "file:///E:/网站图片/O1CN01AFSZr12GdShV7Lkbe_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.15 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州葡萄不愤怒乐队Lucky_Star2025巡演_福州站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州葡萄不愤怒乐队Lucky_Star2025巡演_福州站.html"
+  },
+  {
+    "title": "大宽等烟火的人个人巡演 福州站",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "唯美萱MAKERLIVE(三盛33)",
+    "price": "130",
+    "img": "file:///E:/网站图片/O1CN01Z6WbWl2GdSgTeALUB_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.25 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州大宽等烟火的人个人巡演_福州站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州大宽等烟火的人个人巡演_福州站.html"
+  },
+  {
+    "title": "穗门如昨——苏紫旭二〇二五个人巡演 福州站",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "通莎现场TOMTWO LIVEHOUSE",
+    "price": "128",
+    "img": "file:///E:/网站图片/O1CN015zYefr2GdShooXjue_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.18 周五 20:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州穗门如昨_苏紫旭二〇二五个人巡演_福州站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州穗门如昨_苏紫旭二〇二五个人巡演_福州站.html"
+  },
+  {
+    "title": "台湾迷幻/噪音摇滚乐队Dope Purple武震式五巡演 福州站",
+    "city": "福州",
+    "category": "演唱会",
+    "venue": "唯美萱MAKERLIVE(三盛33)",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN0160gNjE2GdShZohEGn_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.12 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "福州_福州台湾迷幻_噪音摇滚乐队Dope_Purple武震式五巡演_福州站.html",
+    "province": "福建省",
+    "detail_url": "provinces-shows/福建省/福州/details/福州_福州台湾迷幻_噪音摇滚乐队Dope_Purple武震式五巡演_福州站.html"
+  },
+  {
+    "title": "step.jad依加Nightstep夜季！2025巡演沈阳站",
+    "city": "沈阳",
+    "category": "演唱会",
+    "venue": "沈阳和平环世界足球公园",
+    "price": "198",
+    "img": "file:///E:/网站图片/O1CN01QzorCZ2GdSi1mkeQl_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19-07.20",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "沈阳_沈阳step_jad依加Nightstep夜季_2025巡演沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳step_jad依加Nightstep夜季_2025巡演沈阳站.html"
+  },
+  {
+    "title": "余佳运 45平米演唱会livehouse限定版沈阳站",
+    "city": "沈阳",
+    "category": "演唱会",
+    "venue": "沈阳·原料库VAST FACTORY(红梅店)",
+    "price": "398",
+    "img": "file:///E:/网站图片/O1CN01s3ATHn2GdShpAF2Dn_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.20 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "沈阳_沈阳余佳运_45平米演唱会livehouse限定版沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳余佳运_45平米演唱会livehouse限定版沈阳站.html"
+  },
+  {
+    "title": "四海福临2025德云社烧饼曹鹤阳相声专场-沈阳站",
+    "city": "沈阳",
+    "category": "曲艺杂坛",
+    "venue": "辽宁中华剧场",
+    "price": "99",
+    "img": "file:///E:/网站图片/O1CN01jiG2472GdShu91lGL_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.16 周六 19:30",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "沈阳_沈阳四海福临2025德云社烧饼曹鹤阳相声专场_沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳四海福临2025德云社烧饼曹鹤阳相声专场_沈阳站.html"
+  },
+  {
+    "title": "开心麻花综艺同款爆笑大戏出马沈阳站",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "辽宁大剧院大剧场",
+    "price": "80",
+    "img": "file:///E:/网站图片/O1CN010aVpYa2GdShSXG2xT_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.04-07.06",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳开心麻花综艺同款爆笑大戏出马沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳开心麻花综艺同款爆笑大戏出马沈阳站.html"
+  },
+  {
+    "title": "乌兰图雅 花开四季 沈阳演唱会",
+    "city": "沈阳",
+    "category": "音乐会",
+    "venue": "辽宁中华剧场",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01iwwZDv2GdShJnCUpA_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.11.15 周六 19:30",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "沈阳_沈阳乌兰图雅_花开四季_沈阳演唱会.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳乌兰图雅_花开四季_沈阳演唱会.html"
+  },
+  {
+    "title": "老舍经典话剧茶馆沈阳站",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "辽宁中华剧场",
+    "price": "90",
+    "img": "file:///E:/网站图片/O1CN01cndGD62GdShpbEhyh_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.09.20 周六 19:00",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳老舍经典话剧茶馆沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳老舍经典话剧茶馆沈阳站.html"
+  },
+  {
+    "title": "中文原创音乐剧海上钢琴师",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "盛京大剧院·歌剧厅",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN018ISJuW2GdSi7mi5jU_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.19 周五 19:00",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳中文原创音乐剧海上钢琴师.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳中文原创音乐剧海上钢琴师.html"
+  },
+  {
+    "title": "戏剧嘉年华悬疑侦探话剧|沉浸式-经典话剧完美犯罪1：1比例还原庭审现场|多种结局",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "盛京大剧院·歌剧厅",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN010kyWqX2GdShnh2XHg_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.08 周一 19:00",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳_戏剧嘉年华悬疑侦探话剧_沉浸式_经典话剧完美犯罪1_1比例还原庭审现场_多种结局.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳_戏剧嘉年华悬疑侦探话剧_沉浸式_经典话剧完美犯罪1_1比例还原庭审现场_多种结局.html"
+  },
+  {
+    "title": "墨明棋妙2025年线下巡演沈阳站 \"万有引力向古风",
+    "city": "沈阳",
+    "category": "演唱会",
+    "venue": "沈阳·原料库VAST FACTORY(红梅店)",
+    "price": "299",
+    "img": "file:///E:/网站图片/O1CN01djXgwL2GdSglxkfWN_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "沈阳_沈阳墨明棋妙2025年线下巡演沈阳站_万有引力向古风.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳墨明棋妙2025年线下巡演沈阳站_万有引力向古风.html"
+  },
+  {
+    "title": "点唱机音乐剧我要你",
+    "city": "沈阳",
+    "category": "音乐剧",
+    "venue": "盛京大剧院·歌剧厅",
+    "price": "120",
+    "img": "file:///E:/网站图片/O1CN01OwJhSU2GdSiBnZz6K_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.09.12 周五 19:00",
+    "tag": "音乐剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳点唱机音乐剧我要你.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳点唱机音乐剧我要你.html"
+  },
+  {
+    "title": "邓寓君 等什么君 \"精东神2025巡回演唱会 沈阳站",
+    "city": "沈阳",
+    "category": "演唱会",
+    "venue": "沈阳·原料库VAST FACTORY(红梅店)",
+    "price": "298",
+    "img": "file:///E:/网站图片/O1CN01xb8DKl2GdShJpmNiP_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "沈阳_沈阳邓寓君_等什么君_精东神2025巡回演唱会_沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳邓寓君_等什么君_精东神2025巡回演唱会_沈阳站.html"
+  },
+  {
+    "title": "戏剧嘉年华悬疑侦探话剧剧目 沈浸式经典话剧完美犯罪",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "寰宇剧场(青年大街中心)",
+    "price": "19",
+    "img": "file:///E:/网站图片/O1CN01CfWORP2GdShzQqDLG_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.31",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳戏剧嘉年华悬疑侦探话剧剧目_沈浸式经典话剧完美犯罪.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳戏剧嘉年华悬疑侦探话剧剧目_沈浸式经典话剧完美犯罪.html"
+  },
+  {
+    "title": "戏剧嘉年华悬疑侦探话剧|沉浸式-经典话剧完美犯罪1：1比例还原庭审现场|多种结局",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "喜乐牛牛爆笑中心",
+    "price": "19",
+    "img": "file:///E:/网站图片/O1CN01CfWORP2GdShzQqDLG_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.31",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳_戏剧嘉年华悬疑侦探话剧_沉浸式_经典话剧完美犯罪1_1比例还原庭审现场_多种结局.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳_戏剧嘉年华悬疑侦探话剧_沉浸式_经典话剧完美犯罪1_1比例还原庭审现场_多种结局.html"
+  },
+  {
+    "title": "暗杠走歌人2025十年全国巡演 沈阳站",
+    "city": "沈阳",
+    "category": "演唱会",
+    "venue": "沈阳·原料库VAST FACTORY(红梅店)",
+    "price": "128",
+    "img": "file:///E:/网站图片/O1CN01HfEbzK2GdShj0SKz1_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.03 周日 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "沈阳_沈阳暗杠走歌人2025十年全国巡演_沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳暗杠走歌人2025十年全国巡演_沈阳站.html"
+  },
+  {
+    "title": "爆笑即兴喜剧脱口秀 步行街之夜 即兴喜剧脱口秀 即兴吐槽解压",
+    "city": "沈阳",
+    "category": "曲艺杂坛",
+    "venue": "喜乐牛牛爆笑中心",
+    "price": "19",
+    "img": "file:///E:/网站图片/O1CN01lofRhV2GdShwaBixB_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.04-07.31",
+    "tag": "曲艺杂坛",
+    "status": "售票中",
+    "path": "沈阳_沈阳爆笑即兴喜剧脱口秀_步行街之夜_即兴喜剧脱口秀_即兴吐槽解压.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳爆笑即兴喜剧脱口秀_步行街之夜_即兴喜剧脱口秀_即兴吐槽解压.html"
+  },
+  {
+    "title": "step.jad依加Nightstep夜季！2025巡演沈阳站",
+    "city": "沈阳",
+    "category": "演唱会",
+    "venue": "沈阳·原料库VAST FACTORY(红梅店)",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN01J4ZCYj2GdSh02K0ZM_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.27 周日 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "沈阳_沈阳step_jad依加Nightstep夜季_2025巡演沈阳站.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳step_jad依加Nightstep夜季_2025巡演沈阳站.html"
+  },
+  {
+    "title": "沈阳站重大革命历史题材舞台剧觉醒之破晓1921",
+    "city": "沈阳",
+    "category": "话剧歌剧",
+    "venue": "铁西万达影城5号IMAX厅",
+    "price": "19.9",
+    "img": "file:///E:/网站图片/O1CN01XERNo82GdSi4KLNX5_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.13 周日 17:00",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "沈阳_沈阳沈阳站重大革命历史题材舞台剧觉醒之破晓1921.html",
+    "province": "辽宁省",
+    "detail_url": "provinces-shows/辽宁省/沈阳/details/沈阳_沈阳沈阳站重大革命历史题材舞台剧觉醒之破晓1921.html"
+  },
+  {
+    "title": "韩红2025\"我想成为你\"巡回演唱会-重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "华熙LIVE·鱼洞场馆",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01b76Bf82GdShxPev5O_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.23 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_韩红2025_我想成为你_巡回演唱会_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_韩红2025_我想成为你_巡回演唱会_重庆站.html"
+  },
+  {
+    "title": "829七夕情人节演唱会「以爱之名」重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "MAO Livehouse重庆",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01tw0wmY2GdSi523RXF_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_829七夕情人节演唱会_以爱之名_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_829七夕情人节演唱会_以爱之名_重庆站.html"
+  },
+  {
+    "title": "曹轩宾「迷人的危险Captivating Danger」巡演·重庆站（七夕）",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "重庆大剧院",
+    "price": "380",
+    "img": "file:///E:/网站图片/O1CN01SCtJSZ2GdShms63o0_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.08.29 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_曹轩宾_迷人的危险Captivating_Danger_巡演_重庆站_七夕.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_曹轩宾_迷人的危险Captivating_Danger_巡演_重庆站_七夕.html"
+  },
+  {
+    "title": "江苏大剧院原创民族舞剧《红楼梦》重庆站",
+    "city": "重庆",
+    "category": "话剧歌剧",
+    "venue": "重庆大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01C6wQfC2GdSiC4rBJI_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.07.04-07.08",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "重庆_江苏大剧院原创民族舞剧_红楼梦_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_江苏大剧院原创民族舞剧_红楼梦_重庆站.html"
+  },
+  {
+    "title": "舞剧《无名之辈》",
+    "city": "重庆",
+    "category": "话剧歌剧",
+    "venue": "重庆国泰艺术中心大剧场",
+    "price": "126",
+    "img": "file:///E:/网站图片/O1CN01FAaeCf2GdSi1Eu63G_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.15-08.17",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "重庆_舞剧_无名之辈.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_舞剧_无名之辈.html"
+  },
+  {
+    "title": "原创芭蕾舞剧《红楼梦》（大剧场）",
+    "city": "重庆",
+    "category": "舞蹈芭蕾",
+    "venue": "重庆大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN015L2Vdz2GdShvWFBgr_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.11.29-11.30",
+    "tag": "舞蹈芭蕾",
+    "status": "售票中",
+    "path": "重庆_原创芭蕾舞剧_红楼梦_大剧场.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_原创芭蕾舞剧_红楼梦_大剧场.html"
+  },
+  {
+    "title": "2025七夕情人节\"跨越银河的爱恋\"TOP情歌演唱会-重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "寅派动力",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01luLZ192GdShp0VKRf_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_2025七夕情人节_跨越银河的爱恋_TOP情歌演唱会_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_2025七夕情人节_跨越银河的爱恋_TOP情歌演唱会_重庆站.html"
+  },
+  {
+    "title": "KPOPFM重庆站【夏日特辑】| 千人KPOP音乐节",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "MAO Livehouse重庆",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01MOXAly2GdSiD4qL5f_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.11 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_KPOPFM重庆站_夏日特辑_千人KPOP音乐节.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_KPOPFM重庆站_夏日特辑_千人KPOP音乐节.html"
+  },
+  {
+    "title": "江苏大剧院原创舞蹈剧场《春之祭》（大剧场）",
+    "city": "重庆",
+    "category": "话剧歌剧",
+    "venue": "重庆大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN011CDscr2GdShUShSDp_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.07.12-07.13",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "重庆_江苏大剧院原创舞蹈剧场_春之祭_大剧场.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_江苏大剧院原创舞蹈剧场_春之祭_大剧场.html"
+  },
+  {
+    "title": "《爱·永恒》理查德·克莱德曼钢琴音乐会",
+    "city": "重庆",
+    "category": "音乐会",
+    "venue": "重庆市人民大礼堂",
+    "price": "280",
+    "img": "file:///E:/网站图片/O1CN01aB88eq2GdShwmVfGJ_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.12.28 周日 19:30",
+    "tag": "音乐会",
+    "status": "售票中",
+    "path": "重庆_爱_永恒_理查德_克莱德曼钢琴音乐会.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_爱_永恒_理查德_克莱德曼钢琴音乐会.html"
+  },
+  {
+    "title": "港合风怀旧情经典金曲演唱会",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "重庆金源艺术中心",
+    "price": "100",
+    "img": "file:///E:/网站图片/O1CN01bEr6fS2GdSi4F9nPZ_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.01 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_港合风怀旧情经典金曲演唱会.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_港合风怀旧情经典金曲演唱会.html"
+  },
+  {
+    "title": "上海话剧艺术中心·国风悬疑舞台剧《清明上河图密码》",
+    "city": "重庆",
+    "category": "话剧歌剧",
+    "venue": "施光南大剧院",
+    "price": "180",
+    "img": "file:///E:/网站图片/O1CN01UxEq7a2GdSi3kPsW1_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.11.21-11.22",
+    "tag": "话剧歌剧",
+    "status": "售票中",
+    "path": "重庆_上海话剧艺术中心_国风悬疑舞台剧_清明上河图密码.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_上海话剧艺术中心_国风悬疑舞台剧_清明上河图密码.html"
+  },
+  {
+    "title": "2025陈小春生·旦·净·末·丑巡回演唱会-重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "华熙LIVE·鱼洞场馆",
+    "price": "480",
+    "img": "file:///E:/网站图片/O1CN01U8dvJ72GdSgqM4Qf1_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.26 周六 19:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_2025陈小春生_旦_净_末_丑巡回演唱会_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_2025陈小春生_旦_净_末_丑巡回演唱会_重庆站.html"
+  },
+  {
+    "title": "王忻辰2025巡演|回忆观影券 重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "寅派动力",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01DJGE6E2GdShxkJdMU_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.19 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_王忻辰2025巡演_回忆观影券_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_王忻辰2025巡演_回忆观影券_重庆站.html"
+  },
+  {
+    "title": "平民说唱明星说唱派对重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "MAO Livehouse重庆",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01bupvAc2GdSi3lms7Z_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.07.18 周五 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_平民说唱明星说唱派对重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_平民说唱明星说唱派对重庆站.html"
+  },
+  {
+    "title": "【许飞】2025《乘鸟先飞——巡回筹蛋拯救计划》重庆站",
+    "city": "重庆",
+    "category": "演唱会",
+    "venue": "MAO Livehouse重庆",
+    "price": "220",
+    "img": "file:///E:/网站图片/O1CN01jJXdpU2GdShr6oKta_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.16 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "重庆_2025_乘鸟先飞_巡回筹蛋拯救计划_重庆站.html",
+    "province": "重庆",
+    "detail_url": "provinces-shows/重庆/重庆/details/重庆_2025_乘鸟先飞_巡回筹蛋拯救计划_重庆站.html"
+  },
+  {
+    "title": "夏川里美2025巡回演唱会——西安纪念场",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "陕西大剧院·歌剧厅",
+    "price": "70",
+    "img": "file:///E:/网站图片/O1CN01TCMfSf2GdSi0CFd5Y_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.09.14 周日 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_夏川里美2025巡回演唱会_西安纪念场.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_夏川里美2025巡回演唱会_西安纪念场.html"
+  },
+  {
+    "title": "8.2【KPOPBOOM西安站】BIGBANG专场｜千人KPOP派对",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "西演SPACE·蔚蔚陆陆",
+    "price": "88",
+    "img": "file:///E:/网站图片/O1CN01i26CZT2GdShXj1O1t_!!2251059038.png_q60.jpg_.webp",
+    "date": "2025.08.02 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_8_2_KPOPBOOM西安站_BIGBANG专场_千人KPOP派对.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_8_2_KPOPBOOM西安站_BIGBANG专场_千人KPOP派对.html"
+  },
+  {
+    "title": "黄旭「荣耀我的范」2025巡演·西安站",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "西演SPACE·创意谷展演中心·车库LIVE",
+    "price": "10",
+    "img": "file:///E:/网站图片/O1CN01wr2XN12GdShawJVEW_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.04 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_黄旭_荣耀我的范_2025巡演_西安站.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_黄旭_荣耀我的范_2025巡演_西安站.html"
+  },
+  {
+    "title": "街带2004·青春回游演唱会——一键回到华语乐坛黄金年代（西安站）",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "西演SPACE光圈CLUB",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01redLwA2GdShT3jt27_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.09 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_街带2004_青春回游演唱会_一键回到华语乐坛黄金年代_西安站.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_街带2004_青春回游演唱会_一键回到华语乐坛黄金年代_西安站.html"
+  },
+  {
+    "title": "2025七夕情人节\"跨越银河的爱恋\"TOP情歌演唱会",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "西演SPACE·福星现场",
+    "price": "98",
+    "img": "file:///E:/网站图片/O1CN01O8mBIA2GdShqS7vEA_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.29 周五 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_2025七夕情人节_跨越银河的爱恋_TOP情歌演唱会.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_2025七夕情人节_跨越银河的爱恋_TOP情歌演唱会.html"
+  },
+  {
+    "title": "step.jad依加\"Nightstep夜奔！\"2025巡演西安站",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "壹球工厂LIVEHOUSE",
+    "price": "288",
+    "img": "file:///E:/网站图片/O1CN01HbMXlS2GdShWVNALA_!!4611686018427383646-2-item_pic.png_q60.jpg_.webp",
+    "date": "2025.08.23 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_step_jad依加_Nightstep夜奔_2025巡演西安站.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_step_jad依加_Nightstep夜奔_2025巡演西安站.html"
+  },
+  {
+    "title": "暗杠\"走歌人2025·十年\"全国巡演 西安站",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "西演SPACE·蔚蔚陆陆",
+    "price": "128",
+    "img": "file:///E:/网站图片/O1CN01ZpSgn62GdShhitJSu_!!4611686018427383646-0-item_pic.jpg_q60.jpg_.webp",
+    "date": "2025.09.06 周六 20:00",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_暗杠_走歌人2025_十年_全国巡演_西安站.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_暗杠_走歌人2025_十年_全国巡演_西安站.html"
+  },
+  {
+    "title": "邓禹君等什么君\"精禅神\"2025巡回演唱会 西安站",
+    "city": "西安",
+    "category": "演唱会",
+    "venue": "壹球工厂LIVEHOUSE",
+    "price": "298",
+    "img": "file:///E:/网站图片/O1CN018YJ3zU2GdShcdWjNM_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.08.09 周六 19:30",
+    "tag": "演唱会",
+    "status": "售票中",
+    "path": "西安_邓禹君等什么君_精禅神_2025巡回演唱会_西安站.html",
+    "province": "陕西省",
+    "detail_url": "provinces-shows/陕西省/西安/details/西安_邓禹君等什么君_精禅神_2025巡回演唱会_西安站.html"
+  },
+  {
+    "title": "等枝杈成繁花-十个勤天巡回演唱会太原站",
+    "city": "太原",
+    "category": "演唱会",
+    "venue": "山西体育中心体育场",
+    "price": "388-1588",
+    "img": "https://img.alicdn.com/bao/uploaded/https://img.alicdn.com/imgextra/i3/2251059038/O1CN01j2DhIJ2GdShv3Bv3N_!!2251059038.jpg_q60.jpg_.webp",
+    "date": "2025.07.11-07.12",
+    "tag": "售票中",
+    "status": "售票中",
+    "path": "太原_等枝杈成繁花_十个勤天巡回演唱会_太原站.html",
+    "province": "山西省",
+    "detail_url": "provinces-shows/山西省/太原/details/太原_等枝杈成繁花_十个勤天巡回演唱会_太原站.html",
+    "seatmap": "https://item-cdn.damai.cn/187ad9d6039c4b59a9879a84eaefec91.jpg"
+  }
+];
+
+    // 全局变量
+    const PAGE_SIZE = 10;
+    let shows = window.showsData || [];
+    let currentPage = 1;
+    let filterProvince = '全部';
+    let filterCity = '全部';
+    let filterCategory = '全部';
+    let searchKeyword = '';
+
+    // 渲染城市下拉框
+    function renderCitySelectByProvince() {
+        const citySelect = document.getElementById('city-select');
+        let province = document.getElementById('province-select').value;
+        
+        if (province === '全部') {
+            const allCities = Object.values(window.provinceCityMap).flat();
+            const cities = ['全部', ...Array.from(new Set(allCities))];
+            citySelect.innerHTML = cities.map(c => `<option value="${c}">${c}</option>`).join('');
+        } else {
+            const cities = ['全部', ...(window.provinceCityMap[province] || [])];
+            citySelect.innerHTML = cities.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+        citySelect.value = '全部';
+        filterCity = '全部';
+    }
+
+    // 筛选演出
+    function filterShows() {
+        return shows.filter(show => {
+            const matchProvince = filterProvince === '全部' || show.province === filterProvince;
+            const matchCity = filterCity === '全部' || show.city === filterCity;
+            const matchCat = filterCategory === '全部' || show.category === filterCategory;
+            const keyword = searchKeyword.trim().toLowerCase();
+            const matchKeyword = !keyword || (
+                (show.title || show.name || '').toLowerCase().includes(keyword) ||
+                (show.artist || '').toLowerCase().includes(keyword) ||
+                (show.venue || '').toLowerCase().includes(keyword) ||
+                (show.city || '').toLowerCase().includes(keyword) ||
+                (show.category || '').toLowerCase().includes(keyword)
+            );
+            return matchProvince && matchCity && matchCat && matchKeyword;
+        });
+    }
+
+    // 渲染演出卡片
+    function renderShows(page = 1) {
+        const filteredShows = filterShows();
+        const startIndex = (page - 1) * PAGE_SIZE;
+        const endIndex = startIndex + PAGE_SIZE;
+        const pageShows = filteredShows.slice(startIndex, endIndex);
+        
+        const cardList = document.getElementById('card-list');
+        cardList.innerHTML = pageShows.map(show => `
+            <div class="show-card" onclick="window.open('${show.detail_url || '#'}','_blank')">
+                <img class="show-img" src="${show.img || ''}" alt="${show.title || show.name || ''}">
+                <div class="show-info">
+                    <div class="show-title">${show.title || show.name || ''}</div>
+                    <div class="show-meta">${show.artist ? show.artist + ' | ' : ''}${show.city || ''} | ${show.venue || ''}</div>
+                    <div class="show-meta">${show.date || ''} <span class="badge-category">${show.category || ''}</span></div>
+                    <div class="show-price">${show.price ? '￥' + show.price : ''}</div>
+                </div>
+            </div>
+        `).join('');
+        
+        // 更新总数
+        document.getElementById('total-count').textContent = filteredShows.length;
+        
+        // 渲染分页
+        renderPagination(filteredShows.length, page);
+    }
+
+    // 渲染分页控件
+    function renderPagination(total, currentPage) {
+        const totalPages = Math.ceil(total / PAGE_SIZE);
+        const pagination = document.getElementById('pagination');
+        
+        if (totalPages <= 1) {
+            pagination.innerHTML = '';
+            return;
+        }
+        
+        let paginationHTML = '';
+        
+        // 上一页
+        if (currentPage > 1) {
+            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${currentPage - 1})">上一页</a></li>`;
+        }
+        
+        // 页码
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPage) {
+                paginationHTML += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+            } else {
+                paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${i})">${i}</a></li>`;
+            }
+        }
+        
+        // 下一页
+        if (currentPage < totalPages) {
+            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${currentPage + 1})">下一页</a></li>`;
+        }
+        
+        pagination.innerHTML = paginationHTML;
+    }
+
+    // 跳转到指定页
+    function goToPage(page) {
+        currentPage = page;
+        renderShows(page);
+    }
+
+    
+    // 搜索按钮点击事件
+    function performSearch() {
+        const searchInput = document.getElementById('search-input');
+        searchKeyword = searchInput.value;
+        currentPage = 1;
+        renderShows(1);
+    }
+
+
+    // 事件监听器
+    document.getElementById('province-select').addEventListener('change', function(e) {
+        filterProvince = e.target.value;
+        renderCitySelectByProvince();
+        filterCategory = document.getElementById('category-select').value;
+        currentPage = 1;
+        renderShows(1);
+    });
+
+    document.getElementById('city-select').addEventListener('change', function(e) {
+        filterCity = e.target.value;
+        filterCategory = document.getElementById('category-select').value;
+        currentPage = 1;
+        renderShows(1);
+    });
+
+    document.getElementById('category-select').addEventListener('change', function(e) {
+        filterCategory = e.target.value;
+        currentPage = 1;
+        renderShows(1);
+    });
+
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        searchKeyword = e.target.value;
+        currentPage = 1;
+        renderShows(1);
+    });
+
+    // 页面初始化
+    window.onload = function() {
+        renderCitySelectByProvince();
+        document.getElementById('category-select').value = filterCategory;
+        renderShows(1);
+        
+        // 模拟城市定位
+        document.getElementById('current-city').textContent = '北京';
+    };
+    </script>
+</body>
+</html>
